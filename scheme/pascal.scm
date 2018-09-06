@@ -1,0 +1,15 @@
+(define (nCr n r)
+  (if (or (= r 0) (= r n))
+      1
+    (* (nCr n (- r 1)) (+ n (- r) 1) (/ r))))
+(require (lib "48.ss" "srfi"))
+(define (nCrs n)
+  (let loop ((n n) (r n))
+    (if (< r 0)
+        (newline)
+        (begin (display (format "~8F" (nCr n r)))
+               (loop n (- r 1))))))
+(define (pascal n)
+  (if (< n 0)
+      'end
+      (begin (pascal (- n 1)) (nCrs n))))

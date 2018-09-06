@@ -1,0 +1,41 @@
+(define (make-queue) (cons '() '()))
+
+(define (empty-queue? q)
+  (null? (car q)))
+
+(define (front q)
+  (if (empty-queue? q)
+      (error "front: empty queue")
+      (caar q)))
+
+(define (insert-queue! q x)
+  (let ([new-pair (cons x '())])
+    (if (empty-queue? q)
+        (begin (set-car! q new-pair)
+               (set-cdr! q new-pair))
+        (begin (set-cdr! (cdr q) new-pair)
+               (set-cdr! q new-pair)))))
+
+(define (delete-queue! q)
+  (if (empty-queue? q)
+      (error "delete-queue!: empty queue")
+      (let ([obj (caar q)])
+        (set-car! q (cdar q))
+        obj)))
+
+(define (print-queue q)
+  (define (sub-print ls)
+    (if (null? ls)
+        (begin (display " <- rear\n")
+               'done)
+        (begin (display " <- ")
+               (write (car ls))
+               (sub-print (cdr ls)))))
+  (display "front")
+  (sub-print (car q)))
+
+(define k (make-queue))
+(insert-queue! k #\o)
+(insert-queue! k "hello")
+(insert-queue! k 123)
+
