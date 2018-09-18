@@ -34,6 +34,7 @@ object ErrorHandling {
     findValidUser match {
       case Left(NotFound(id)) => println(s"User(${id}) is absent.")
       case Right(user) => println(s"Found: ${user.name}")
+      case _ => ()
   }
 
   def findValidUser: Either[MyError, User] = ???
