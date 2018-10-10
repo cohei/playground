@@ -52,4 +52,6 @@ tests:
       - -with-rtsopts=-N
     dependencies:
       - playground
+      - hspec
       - IOSpec
+      - QuickCheck
