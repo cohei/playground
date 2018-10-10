@@ -24,10 +24,10 @@ test1, test2, test3, test4, test5 :: Bool
 
 -- like Arc
 test1 = runAccumulatorGenerator $ do
-  accumulator <- accumulatorGenerator 10
-  n1 <- accumulator 0
-  n2 <- accumulator 5
-  n3 <- accumulator (-2)
+  accumulator' <- accumulatorGenerator 10
+  n1 <- accumulator' 0
+  n2 <- accumulator' 5
+  n3 <- accumulator' (-2)
   return $ (n1, n2, n3) == (10, 15, 13)
 
 -- pure state monad
@@ -54,10 +54,10 @@ test4 = runAccumulatorGenerator' 10 $ do
   return $ (n1, n2, n3) == (10, 15, 13)
 
 -- the most Haskell-ish
-test5 = accumulatorGenerator' 10 $ \accumulator -> do
-  n1 <- accumulator 0
-  n2 <- accumulator 5
-  n3 <- accumulator (-2)
+test5 = accumulatorGenerator' 10 $ \accumulator' -> do
+  n1 <- accumulator' 0
+  n2 <- accumulator' 5
+  n3 <- accumulator' (-2)
   return $ (n1, n2, n3) == (10, 15, 13)
 
 accumulatorGenerator :: Int -> State Int (Int -> State Int Int)

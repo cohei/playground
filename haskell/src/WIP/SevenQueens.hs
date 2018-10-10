@@ -4,9 +4,9 @@ module WIP.SevenQueens where
 import           Control.Monad       (guard, replicateM)
 import           Control.Monad.State (State, StateT, get, put)
 import           Control.Monad.Trans (lift)
-import           Data.Array
+import           Data.Array          (Array, assocs, elems, listArray, (//))
 import           Data.Bool           (bool)
-import           Data.List
+import           Data.List           (nub)
 import           Utility             (chop)
 
 --type Board = [[Bool]]
@@ -58,13 +58,13 @@ allOccupied = and . elems . board
 canPuts :: [Queens]
 canPuts = filter ((5 ==) . length) $ map nub $ replicateM 5 $ puttables initial
 
-
+a :: IO ()
 a = mapM_ print $ nub [ b | qs <- canPuts, let b = foldr putQueen initial qs, allOccupied b ]
 
 
 stepNonDet :: State BoardState ()
 stepNonDet = do
-  boardState <- get
+  _boardState <- get
   undefined
 
 putQueenNonDeterministic :: StateT BoardState [] ()
