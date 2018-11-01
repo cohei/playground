@@ -1,3 +1,6 @@
 resolver: nightly-2018-11-01
 packages:
   - .
+extra-deps:
+  - github: cohei/haskell-utility
+    commit: 0c05acc
