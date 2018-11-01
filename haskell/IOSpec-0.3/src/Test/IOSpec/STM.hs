@@ -22,7 +22,7 @@ import Test.IOSpec.VirtualMachine
 import Test.IOSpec.Types
 import Data.Dynamic
 import Data.Maybe (fromJust)
-import Control.Monad.State
+import Control.Monad.State (get, runStateT, put)
 import Control.Monad (ap)
 
 -- The 'STMS' data type and its instances.
@@ -73,7 +73,6 @@ instance Applicative STM where
   (<*>) = ap
 
 instance Monad STM where
-  return                = STMReturn
   STMReturn a >>= f     = f a
   NewTVar d g >>= f     = NewTVar d (\l -> g l >>= f)
   ReadTVar l g >>= f    = ReadTVar l (\d -> g d >>= f)

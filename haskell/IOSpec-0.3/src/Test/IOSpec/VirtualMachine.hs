@@ -37,12 +37,13 @@ module Test.IOSpec.VirtualMachine
   )
   where
 
+import Control.Monad.Fail (MonadFail(fail))
 import Control.Monad.State
 import Data.Dynamic
 import Data.List
 import qualified Data.Stream as Stream
 import Test.IOSpec.Types
-import Test.QuickCheck
+import Test.QuickCheck (Arbitrary(arbitrary), CoArbitrary(coarbitrary))
 import Control.Monad (ap)
 
 type Data         = Dynamic
@@ -217,11 +218,13 @@ instance Applicative Effect where
   (<*>) = ap
 
 instance Monad Effect where
-  return = Done
   (Done x) >>= f = f x
   (ReadChar t) >>= f = ReadChar (\c -> t c >>= f)
   (Print c t) >>= f = Print c (t >>= f)
   (Fail msg) >>= _ = Fail msg
+
+instance MonadFail Effect where
+  fail = error
 
 instance Eq a => Eq (Effect a) where
   (Done x) == (Done y) = x == y

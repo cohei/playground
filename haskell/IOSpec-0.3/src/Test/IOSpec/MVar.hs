@@ -41,7 +41,7 @@ instance Functor MVarS where
 newtype MVar a = MVar Loc deriving Typeable
 
 -- | The 'newEmptyMVar' function creates a new 'MVar' that is initially empty.
-newEmptyMVar        :: (Typeable a, MVarS :<: f) => IOSpec f (MVar a)
+newEmptyMVar        :: (MVarS :<: f) => IOSpec f (MVar a)
 newEmptyMVar        = inject $ NewEmptyMVar (return . MVar)
 
 -- | The 'takeMVar' function removes the value stored in an

@@ -1,4 +1,4 @@
-{-# LANGUAGE OverlappingInstances, TypeOperators, FlexibleInstances #-}
+{-# LANGUAGE TypeOperators, FlexibleInstances #-}
 -- | This module contains the basic data types underlying the
 -- 'IOSpec' library. Most of the types and classes in this module
 -- are described in
@@ -33,14 +33,13 @@ instance (Functor f) => Applicative (IOSpec f) where
   (<*>)            = ap
 
 instance (Functor f) => Monad (IOSpec f) where
-  return           = Pure
   (Pure x) >>= f   = f x
   (Impure t) >>= f = Impure (fmap (>>= f) t)
 
 -- | The fold over 'IOSpec' values.
 foldIOSpec :: Functor f => (a -> b) -> (f b -> b) -> IOSpec f a -> b
-foldIOSpec pure _      (Pure x)    = pure x
-foldIOSpec pure impure (Impure t)  = impure (fmap (foldIOSpec pure impure) t)
+foldIOSpec pure' _      (Pure x)    = pure' x
+foldIOSpec pure' impure (Impure t)  = impure (fmap (foldIOSpec pure' impure) t)
 
 -- | The coproduct of functors
 data (f :+: g) x = Inl (f x) | Inr (g x)
