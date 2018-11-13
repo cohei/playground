@@ -1,4 +1,4 @@
-resolver: nightly-2018-11-01
+resolver: nightly-2018-11-12
 packages:
   - .
   - IOSpec-0.3
