@@ -18,6 +18,8 @@ dependencies:
   - base >= 4.7 && < 5
   - array
   - mtl
+  - profunctors
+  - refined
   - utility
 
 ghc-options:
