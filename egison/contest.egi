@@ -1,0 +1,32 @@
+;; https://gist.github.com/egisatoshi/0f1011b0171ba3bd36345cae3a2d4bb2
+
+(define $member?
+  (lambda [$x $xs]
+    (match xs (list eq)
+      {[<join _ <cons ,x _>> #t]
+       [_ #f]})))
+
+(define $reverse
+  (lambda [$xs]
+    (match-all xs (list something)
+      [<nioj _ <snoc $x _>> x])))
+
+(define $concat
+  (lambda [$xss]
+    (match-all xss (list (list something))
+      [(dfs <join _ <cons <join _ <cons $x _>> _>>) x])))
+
+(define $intersect
+  (lambda [$xs $ys]
+    (match-all [xs ys] [(set eq) (set eq)]
+      [[<cons $x _> <cons ,x _>] x])))
+
+(define $unique
+  (lambda [$xs]
+    (match-all xs (list eq)
+      [<join _ <cons $x !?(member? x $)>> x])))
+
+(define $unique2
+  (lambda [$xs]
+    (match-all xs (list eq)
+      [<join (later !?(member? x $)) <cons $x _>> x])))
