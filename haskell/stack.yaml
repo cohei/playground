@@ -1,4 +1,4 @@
-resolver: lts-13.6
+resolver: lts-13.7
 packages:
   - .
   - IOSpec-0.3
