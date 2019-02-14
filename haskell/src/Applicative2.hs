@@ -1,3 +1,4 @@
+{-# OPTIONS_GHC -Wno-missing-import-lists #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Applicative2 where
 

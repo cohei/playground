@@ -1,4 +1,6 @@
-{-# LANGUAGE ExistentialQuantification, FlexibleContexts, TypeOperators #-}
+{-# LANGUAGE ExistentialQuantification #-}
+{-# LANGUAGE FlexibleContexts          #-}
+{-# LANGUAGE TypeOperators             #-}
 -- | A pure specification of 'forkIO'.
 module Test.IOSpec.Fork
    (
@@ -7,8 +9,9 @@ module Test.IOSpec.Fork
    )
    where
 
-import Test.IOSpec.VirtualMachine
-import Test.IOSpec.Types
+import           Test.IOSpec.Types          ((:<:), IOSpec, inject)
+import           Test.IOSpec.VirtualMachine (Executable, Step (Step), ThreadId,
+                                             freshThreadId, step, updateSoup)
 
 -- The 'ForkS' data type and its instances.
 --

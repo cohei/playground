@@ -28,6 +28,7 @@ ghc-options:
   - -Wcompat
   - -Wincomplete-uni-patterns
   - -Wincomplete-record-updates
+  - -Wmissing-import-lists
   - -Wredundant-constraints
   - -Wnoncanonical-monad-instances
   - -fdefer-typed-holes

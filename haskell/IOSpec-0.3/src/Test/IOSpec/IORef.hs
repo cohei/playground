@@ -1,4 +1,5 @@
-{-# LANGUAGE FlexibleContexts, TypeOperators #-}
+{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE TypeOperators    #-}
 -- | A pure specification of mutable variables.
 module Test.IOSpec.IORef
    (
@@ -13,10 +14,12 @@ module Test.IOSpec.IORef
    )
    where
 
-import Data.Dynamic
-import Data.Maybe (fromJust)
-import Test.IOSpec.Types
-import Test.IOSpec.VirtualMachine
+import           Data.Dynamic               (Typeable, fromDynamic, toDyn)
+import           Data.Maybe                 (fromJust)
+import           Test.IOSpec.Types          ((:<:), IOSpec, inject)
+import           Test.IOSpec.VirtualMachine (Data, Executable, Loc, Step (Step),
+                                             alloc, lookupHeap, step,
+                                             updateHeap)
 
 
 -- The 'IORefS' spec.
@@ -65,4 +68,3 @@ instance Executable IORefS where
                                return (Step (t d))
   step (WriteIORef l d t) = do updateHeap l d
                                return (Step t)
-

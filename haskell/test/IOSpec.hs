@@ -1,5 +1,6 @@
--- | <https://conscientiousprogrammer.com/blog/2015/12/15/24-days-of-hackage-2015-day-15-iospec-testing-io-and-some-quickcheck-tricks/ 24 days of Hackage, 2015: day 15: IOSpec: testing IO; and some QuickCheck tricks>
+{-# OPTIONS_GHC -Wno-missing-import-lists #-}
 {-# LANGUAGE ScopedTypeVariables #-}
+-- | <https://conscientiousprogrammer.com/blog/2015/12/15/24-days-of-hackage-2015-day-15-iospec-testing-io-and-some-quickcheck-tricks/ 24 days of Hackage, 2015: day 15: IOSpec: testing IO; and some QuickCheck tricks>
 module IOSpec (spec) where
 
 import           Control.Monad         (when)

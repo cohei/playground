@@ -1,5 +1,6 @@
-{-# LANGUAGE ExistentialQuantification, FlexibleContexts, TypeOperators #-}
-
+{-# LANGUAGE ExistentialQuantification #-}
+{-# LANGUAGE FlexibleContexts          #-}
+{-# LANGUAGE TypeOperators             #-}
 module Test.IOSpec.STM
    (
    -- * The specification of STM
@@ -18,12 +19,15 @@ module Test.IOSpec.STM
    )
    where
 
-import Test.IOSpec.VirtualMachine
-import Test.IOSpec.Types
-import Data.Dynamic
-import Data.Maybe (fromJust)
-import Control.Monad.State (get, runStateT, put)
-import Control.Monad (ap)
+import           Control.Monad              (ap)
+import           Control.Monad.State        (get, put, runStateT)
+import           Data.Dynamic               (Typeable, fromDynamic, toDyn)
+import           Data.Maybe                 (fromJust)
+import           Test.IOSpec.Types          ((:<:), IOSpec, inject)
+import           Test.IOSpec.VirtualMachine (Data, Effect (Done),
+                                             Executable (step), Loc,
+                                             Step (Block, Step), VM, alloc,
+                                             lookupHeap, updateHeap)
 
 -- The 'STMS' data type and its instances.
 --

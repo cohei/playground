@@ -1,4 +1,6 @@
-{-# LANGUAGE DeriveDataTypeable, FlexibleContexts, TypeOperators #-}
+{-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE FlexibleContexts   #-}
+{-# LANGUAGE TypeOperators      #-}
 -- | A pure specification of basic operations on MVars.
 
 module Test.IOSpec.MVar
@@ -13,10 +15,12 @@ module Test.IOSpec.MVar
    )
    where
 
-import Data.Dynamic
-import Data.Maybe (fromJust)
-import Test.IOSpec.Types
-import Test.IOSpec.VirtualMachine
+import           Data.Dynamic               (Typeable, fromDynamic, toDyn)
+import           Data.Maybe                 (fromJust)
+import           Test.IOSpec.Types          ((:<:), IOSpec, inject)
+import           Test.IOSpec.VirtualMachine (Data, Executable (step), Loc,
+                                             Step (Block, Step), alloc,
+                                             emptyLoc, lookupHeap, updateHeap)
 
 -- The 'MVarS' data type and its instances.
 --
@@ -34,8 +38,8 @@ data MVarS a =
 
 instance Functor MVarS where
   fmap f (NewEmptyMVar io) = NewEmptyMVar (f . io)
-  fmap f (TakeMVar l io) = TakeMVar l (f . io)
-  fmap f (PutMVar l d io) = PutMVar l d (f io)
+  fmap f (TakeMVar l io)   = TakeMVar l (f . io)
+  fmap f (PutMVar l d io)  = PutMVar l d (f io)
 
 -- | An 'MVar' is a shared, mutable variable.
 newtype MVar a = MVar Loc deriving Typeable

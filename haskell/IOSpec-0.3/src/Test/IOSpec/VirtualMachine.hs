@@ -1,4 +1,5 @@
-{-# LANGUAGE ExistentialQuantification, TypeOperators #-}
+{-# LANGUAGE ExistentialQuantification #-}
+{-# LANGUAGE TypeOperators             #-}
 
 -- | The virtual machine on which the specifications execute.
 module Test.IOSpec.VirtualMachine
@@ -37,14 +38,16 @@ module Test.IOSpec.VirtualMachine
   )
   where
 
-import Control.Monad.Fail (MonadFail(fail))
-import Control.Monad.State
-import Data.Dynamic
-import Data.List
-import qualified Data.Stream as Stream
-import Test.IOSpec.Types
-import Test.QuickCheck (Arbitrary(arbitrary), CoArbitrary(coarbitrary))
-import Control.Monad (ap)
+import           Control.Monad       (ap)
+import           Control.Monad.Fail  (MonadFail (fail))
+import           Control.Monad.State (StateT (StateT, runStateT), get, gets,
+                                      liftM, put)
+import           Data.Dynamic        (Dynamic)
+import           Data.List           (union, (\\))
+import qualified Data.Stream         as Stream
+import           Test.IOSpec.Types   ((:+:) (Inl, Inr), IOSpec (Impure, Pure))
+import           Test.QuickCheck     (Arbitrary (arbitrary),
+                                      CoArbitrary (coarbitrary))
 
 type Data         = Dynamic
 type Loc          = Int
@@ -75,13 +78,13 @@ data ThreadStatus =
 type ThreadSoup = ThreadId -> ThreadStatus
 
 data Store =
-  Store { fresh :: Loc
-        ,  heap :: Heap
-        ,  nextTid :: ThreadId
-        ,  blockedThreads :: [ThreadId]
+  Store { fresh            :: Loc
+        ,  heap            :: Heap
+        ,  nextTid         :: ThreadId
+        ,  blockedThreads  :: [ThreadId]
         ,  finishedThreads :: [ThreadId]
-        ,  scheduler :: Scheduler
-        ,  threadSoup :: ThreadSoup
+        ,  scheduler       :: Scheduler
+        ,  threadSoup      :: ThreadSoup
         }
 
 initialStore :: Scheduler -> Store
@@ -208,10 +211,10 @@ data Effect a =
   | Fail String
 
 instance Functor Effect where
-  fmap f (Done x) = Done (f x)
+  fmap f (Done x)     = Done (f x)
   fmap f (ReadChar t) = ReadChar (\c -> fmap f (t c))
-  fmap f (Print c t) = Print c (fmap f t)
-  fmap _ (Fail msg) = Fail msg
+  fmap f (Print c t)  = Print c (fmap f t)
+  fmap _ (Fail msg)   = Fail msg
 
 instance Applicative Effect where
   pure = Done
@@ -279,7 +282,7 @@ execVM main = do
     (Main (Impure p)) -> do x <- step p
                             case x of
                               Step y -> resetBlockedThreads >> execVM y
-                              Block -> blockThread mainTid >> execVM main
+                              Block  -> blockThread mainTid >> execVM main
     (Aux (Pure _)) -> do finishThread tid
                          execVM main
     (Aux (Impure p)) -> do x <- step p

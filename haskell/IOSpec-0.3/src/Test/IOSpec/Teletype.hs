@@ -1,4 +1,6 @@
-{-# LANGUAGE FlexibleContexts, TypeOperators #-}
+{-# OPTIONS_GHC -Wno-missing-import-lists #-}
+{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE TypeOperators    #-}
 -- | A pure specification of getChar and putChar.
 module Test.IOSpec.Teletype
    (
@@ -13,10 +15,12 @@ module Test.IOSpec.Teletype
    )
    where
 
-import Prelude hiding (getChar, putChar, putStr, putStrLn, getLine)
-import Control.Monad (forM_)
-import Test.IOSpec.Types
-import Test.IOSpec.VirtualMachine
+import           Control.Monad              (forM_)
+import           Prelude                    hiding (getChar, getLine, putChar,
+                                             putStr, putStrLn)
+import           Test.IOSpec.Types          ((:<:), IOSpec, inject)
+import           Test.IOSpec.VirtualMachine (Executable (step), Step (Step),
+                                             printChar, readChar)
 
 -- The 'Teletype' specification.
 --
@@ -32,8 +36,8 @@ data Teletype a =
   |  PutChar Char a
 
 instance Functor Teletype where
-  fmap f (GetChar tt)       = GetChar (f . tt)
-  fmap f (PutChar c tt)     = PutChar c (f tt)
+  fmap f (GetChar tt)   = GetChar (f . tt)
+  fmap f (PutChar c tt) = PutChar c (f tt)
 
 -- | The 'getChar' function can be used to read a character from the
 -- teletype.

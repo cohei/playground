@@ -1,7 +1,5 @@
 module Bifold where
 
-import Prelude hiding (sum)
-
 {-
 a   -> a' -> ... -> a''
     b        bs
@@ -27,6 +25,6 @@ diffav :: Fractional a => [a] -> [a]
 diffav []     = []
 diffav (x:xs) = x - average : ys
   where
-    average = sum / n
-    ((sum, n), ys) = fold f ((x, 1), []) xs
+    average = sum' / n
+    ((sum', n), ys) = fold f ((x, 1), []) xs
     f ((s, i), zs) z = ((s + z, i + 1), (z - average) : zs)
