@@ -36,6 +36,9 @@ library:
   source-dirs: src
 
 executables:
+  zundoko:
+    main: Main.hs
+    source-dirs: app/zundoko
   janken:
     main: Main.hs
     source-dirs: app/janken
