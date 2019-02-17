@@ -1,4 +1,4 @@
-import           Test.Hspec             (hspec)
+import           Test.Hspec             (describe, hspec)
 
 import qualified ApproximationSpec      (spec)
 import qualified IOSpec                 (spec)
@@ -6,6 +6,6 @@ import qualified LevityPolymorphismSpec (spec)
 
 main :: IO ()
 main = hspec $ do
-  ApproximationSpec.spec
-  IOSpec.spec
-  LevityPolymorphismSpec.spec
+  describe "Approximation" ApproximationSpec.spec
+  describe "IOSpec" IOSpec.spec
+  describe "LevityPolymorphism" LevityPolymorphismSpec.spec

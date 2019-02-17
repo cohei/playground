@@ -6,7 +6,7 @@ module IOSpec (spec) where
 import           Control.Monad         (when)
 import           Data.Coerce           (coerce)
 import           Prelude               hiding (getLine, putStrLn)
-import           Test.Hspec            (Spec, describe)
+import           Test.Hspec            (Spec)
 import           Test.Hspec.QuickCheck (prop)
 import           Test.IOSpec           (Effect (Done, Print, ReadChar), IOSpec,
                                         Teletype, evalIOSpec, getLine, putStrLn,
@@ -29,19 +29,18 @@ logIn = do
 -- | Required for auto-discovery.
 spec :: Spec
 spec =
-  describe "IOSpec" $ do
-    prop "logIn outputs prompts until secret is guessed" $
-      \(notSecretLines :: [NotSecretString]) (anyLines :: [NotNewlineString]) ->
-        let
-          allLines = coerce notSecretLines ++ ["secret"] ++ coerce anyLines
-          expectedOutput =
-            unlines $
-              ["% Enter password:"] ++
-              concatMap (const ["% Wrong password!", "% Try again:"]) notSecretLines ++
-              ["$ Congratulations!"]
-          output = takeOutput (withInput (unlines allLines) (evalIOSpec logIn singleThreaded))
-        in
-          output == expectedOutput
+  prop "logIn outputs prompts until secret is guessed" $
+    \(notSecretLines :: [NotSecretString]) (anyLines :: [NotNewlineString]) ->
+      let
+        allLines = coerce notSecretLines ++ ["secret"] ++ coerce anyLines
+        expectedOutput =
+          unlines $
+            ["% Enter password:"] ++
+            concatMap (const ["% Wrong password!", "% Try again:"]) notSecretLines ++
+            ["$ Congratulations!"]
+        output = takeOutput (withInput (unlines allLines) (evalIOSpec logIn singleThreaded))
+      in
+        output == expectedOutput
 
 -- | User input without a newline, and not equal to "secret".
 newtype NotSecretString =
