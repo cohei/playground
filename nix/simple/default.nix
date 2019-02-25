@@ -1,8 +1,9 @@
-with (import <nixpkgs> {});
+with import <nixpkgs> {};
+
 derivation {
   name = "simple";
   builder = "${bash}/bin/bash";
-  args = [ ./simple_builder.sh ];
+  args = [ ./builder.sh ];
   inherit clang coreutils;
   src = ./simple.c;
   system = builtins.currentSystem;
