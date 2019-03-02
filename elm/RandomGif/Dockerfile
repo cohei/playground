@@ -7,8 +7,8 @@ RUN yarn install
 ENV PATH node_modules/.bin:$PATH
 
 COPY elm.json ./
-COPY RandomGif.elm ./
-RUN elm make RandomGif.elm
+COPY Main.elm ./
+RUN elm make Main.elm
 
 EXPOSE 8000
 CMD ["elm", "reactor"]

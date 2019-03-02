@@ -1,4 +1,4 @@
-module RandomGif exposing (main)
+module Main exposing (main)
 
 import Browser
 import Html exposing (Html, button, div, h2, img, text)
