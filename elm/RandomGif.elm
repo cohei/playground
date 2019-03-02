@@ -1,13 +1,15 @@
 module RandomGif exposing (main)
 
-import Html exposing (Html, div, h2, text, img, button, program)
+import Browser
+import Html exposing (Html, button, div, h2, img, text)
 import Html.Attributes exposing (src)
 import Html.Events exposing (onClick)
 import Http
 import Json.Decode as Decode
 
+main : Program () Model Msg
 main =
-    program { init = init, update = update, subscriptions = \_ -> Sub.none, view = view }
+    Browser.element { init = \_ -> init, update = update, subscriptions = \_ -> Sub.none, view = view }
 
 
 type alias Model =
@@ -29,8 +31,10 @@ update msg model =
     case msg of
         MorePlease ->
             ( model, getRandomGif model.topic )
+
         NewGif (Err _) ->
             ( model, Cmd.none )
+
         NewGif (Ok newUrl) ->
             ( { model | gifUrl = newUrl }, Cmd.none )
 
@@ -47,10 +51,15 @@ view model =
 getRandomGif : String -> Cmd Msg
 getRandomGif topic =
     let
-        url = "https://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag=" ++ topic
-        request = Http.get url decodeGifUrl
+        url =
+            "https://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag=" ++ topic
+
+        request =
+            Http.get url decodeGifUrl
     in
-        Http.send NewGif request
+    Http.send NewGif request
+
 
 decodeGifUrl : Decode.Decoder String
-decodeGifUrl = Decode.at ["data", "image_url"] Decode.string
+decodeGifUrl =
+    Decode.at [ "data", "image_url" ] Decode.string
