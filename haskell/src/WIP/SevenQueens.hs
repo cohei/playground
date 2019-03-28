@@ -38,7 +38,10 @@ queenPower (n,m) = filter inRange $
                    [ (n,j) | j <- [1..7] ] ++ [ (i,m) | i <- [1..7] ] ++
                    [ (i, n+m-i) | i <- [1..(n+m-1)] ] ++ [ (i, m-n+i) | i <- [1..7] ]
     where
-      inRange (i,j) = inRange' i && inRange' j
+      inRange :: (Int, Int) -> Bool
+      inRange (i, j) = inRange' i && inRange' j
+
+      inRange' :: Int -> Bool
       inRange' i = 1 <= i && i <= 7
 
 putQueen :: Queen -> BoardState -> BoardState

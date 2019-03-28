@@ -27,9 +27,15 @@ dependencies:
 ghc-options:
   - -Wall
   - -Wcompat
-  - -Wincomplete-uni-patterns
+  - -Widentities
   - -Wincomplete-record-updates
+  - -Wincomplete-uni-patterns
+  # - -Wmissing-export-lists
+  - -Wmissing-home-modules
   - -Wmissing-import-lists
+  - -Wmissing-local-signatures
+  - -Wmonomorphism-restriction
+  - -Wpartial-fields
   - -Wredundant-constraints
   - -fdefer-typed-holes
 

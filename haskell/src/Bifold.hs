@@ -18,6 +18,7 @@ halve xs = (front, rear)
   where
     ((rear, _), front) = fold f ((xs, xs), []) xs
 
+    f :: (([a], [b]), [c]) -> c -> (([a], [b]), [c])
     f ((rear', []), _)         _ = ((rear', []), [])
     f ((rear', count), front') x = ((tail rear', drop 2 count), x : front')
 

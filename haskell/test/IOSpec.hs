@@ -19,6 +19,7 @@ logIn = do
   go
   putStrLn "$ Congratulations!"
   where
+    go :: IOSpec Teletype ()
     go = do
       guess <- getLine
       when (guess /= "secret") $ do

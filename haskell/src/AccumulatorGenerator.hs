@@ -18,7 +18,7 @@ Example by Arc:
 -}
 module AccumulatorGenerator where
 
-import Control.Monad.State (evalState, State, modify, get, put)
+import           Control.Monad.State (State, evalState, get, modify, put)
 
 test1, test2, test3, test4, test5 :: Bool
 

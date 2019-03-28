@@ -40,12 +40,17 @@ loop (filled, target : empties) = nextStates >>= loop
   where
     nextStates = map (\c -> (target { number = c } : filled, empties)) candidates
     candidates = foldl' (\ns selector -> ns \\ inSame selector) [1..9] [row, column, block]
+
+    inSame :: Eq a => (Cell -> a) -> [Int]
     inSame selector = map number (filter (((==) `on` selector) target) filled)
 
 board :: [Int] -> Board
 board = zipWith (\(r, c) n -> Cell n r c (whichBlock r c)) positions
   where
+    whichBlock :: Int -> Int -> Int
     whichBlock r c = 3 * (r `div` 3) + c `div` 3
+
+    positions :: [(Int, Int)]
     positions = join (liftA2 (,)) [0..8]
 
 display :: Board -> IO ()
@@ -54,6 +59,7 @@ display = mapM_ (print . map number . sortOn column) . chunkOf 9 . sortOn row
 chunkOf :: Int -> [a] -> [[a]]
 chunkOf n = unfoldr f
   where
+    f :: [a] -> Maybe ([a], [a])
     f [] = Nothing
     f xs = Just $ splitAt n xs
 

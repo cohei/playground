@@ -7,7 +7,9 @@ import qualified MapAccumWithState (mapAccumL, mapAccumR)
 
 spec :: Spec
 spec = do
-  let apply f = f (\x y -> (x + y, 2 * x)) 0 [1..5 :: Int]
+  let
+    apply :: ((Int -> Int -> (Int, Int)) -> Int -> [Int] -> a) -> a
+    apply f = f (\x y -> (x + y, 2 * x)) 0 [1..5]
 
   describe "mapAccumL" $
     it "is same as `Data.List.mapAccumL`" $
