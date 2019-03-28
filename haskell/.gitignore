@@ -1,2 +1,3 @@
-/.stack-work/
-/*.cabal
+/.ghc.environment.*
+/dist-newstyle/
+/playground.cabal
