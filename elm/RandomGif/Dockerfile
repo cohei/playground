@@ -2,13 +2,13 @@ FROM node:12.1.0
 
 WORKDIR /app
 
-COPY package.json yarn.lock ./
+COPY package.json yarn.lock .
 RUN yarn install
-ENV PATH node_modules/.bin:$PATH
 
-COPY elm.json ./
-COPY Main.elm ./
-RUN elm make Main.elm
+COPY elm.json Main.elm .
+RUN yarn elm make Main.elm
 
+# for elm reactor
 EXPOSE 8000
-CMD ["elm", "reactor"]
+
+CMD ["yarn", "elm", "reactor"]
