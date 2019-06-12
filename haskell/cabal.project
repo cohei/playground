@@ -1,4 +1,4 @@
-packages: .
+packages: . holdem-winrate
 
 source-repository-package
     type: git
