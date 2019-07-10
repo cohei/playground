@@ -1,42 +1,35 @@
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Main where
 
-import           Data.List  (group, sortOn)
+import           Data.List  (group, sort)
 import           Test.Hspec (describe, hspec, it, shouldBe)
 
 main :: IO ()
 main = hspec $ do
+  describe "splitAce" $
+    it "split ace" $
+      splitAce (makeCard5 (spade 1) (spade 2) (spade 3) (spade 4) (spade 5)) `shouldBe` [makeCard5 (spade 1) (spade 2) (spade 3) (spade 4) (spade 5), makeCard5 (spade 14) (spade 2) (spade 3) (spade 4) (spade 5)]
+
   describe "hand" $ do
     it "checks straight flush, 5" $ do
-      hand (makeCard5 (spade 1) (spade 2) (spade 3) (spade 4) (spade 5)) `shouldBe` StraightFlush
+      hand' (makeCard5 (spade 1) (spade 2) (spade 3) (spade 4) (spade 5)) `shouldBe` StraightFlush
     it "checks straight flush, Ace" $ do
-      hand (makeCard5 (spade 1) (spade 13) (spade 12) (spade 11) (spade 10)) `shouldBe` StraightFlush
+      hand' (makeCard5 (spade 1) (spade 13) (spade 12) (spade 11) (spade 10)) `shouldBe` StraightFlush
     it "checks full house" $ do
-      hand (makeCard5 (spade 1) (heart 1) (club 1) (club 4) (spade 4)) `shouldBe` FullHouse
+      hand' (makeCard5 (spade 1) (heart 1) (club 1) (club 4) (spade 4)) `shouldBe` FullHouse
     it "checks high card" $ do
-      hand (makeCard5 (spade 1) (heart 9) (club 8) (diamond 4) (spade 5)) `shouldBe` HighCard
+      hand' (makeCard5 (spade 1) (heart 9) (club 8) (diamond 4) (spade 5)) `shouldBe` HighCard
 
-data Suit = Spade | Heart | Club | Diamond
-  deriving (Eq)
+data Suit = Club | Diamond | Heart | Spade
+  deriving (Eq, Ord, Show)
 
 newtype Rank =
   Rank Int
-  deriving Eq
-
-instance Ord Rank where
-  compare (Rank 1)  (Rank 1)  = EQ
-  compare (Rank 1)  _         = GT
-  compare _         (Rank 1)  = LT
-  compare (Rank n1) (Rank n2) = compare n1 n2
-
-instance Enum Rank where
-  toEnum 14 = 1
-  toEnum n  = Rank n
-
-  fromEnum (Rank n) = n
+  deriving (Eq, Ord, Enum, Show)
 
 instance Num Rank where
   fromInteger n
-    | 1 <= n && n <= 13 = Rank $ fromIntegral n
+    | 1 <= n && n <= 14 = Rank $ fromIntegral n
     | otherwise         = error "Invalid number"
   (+) = undefined
   (*) = undefined
@@ -45,17 +38,17 @@ instance Num Rank where
   signum = undefined
 
 data Card =
-  Card { suit :: Suit, rank :: Rank }
-  deriving (Eq)
+  Card { rank :: Rank, suit :: Suit }
+  deriving (Eq, Ord)
+
+instance Show Card where
+  show (Card (Rank rank) suit) = show suit ++ " # " ++ show rank
 
 spade, heart, club, diamond :: Rank -> Card
-spade   n = Spade # n
-heart   n = Heart # n
-club    n = Club # n
-diamond n = Diamond # n
-
-(#) :: Suit -> Rank -> Card
-(#) = Card
+spade   n = Card n Spade
+heart   n = Card n Heart
+club    n = Card n Club
+diamond n = Card n Diamond
 
 data Hand =
     HighCard
@@ -69,18 +62,31 @@ data Hand =
   | StraightFlush
   deriving (Eq, Ord, Show)
 
--- 5枚、小さい順
+-- 5枚、一意にするため、数字、次にスートの小さい順
 newtype Card5 =
   Card5 [Card]
-  deriving Eq
+  deriving (Eq, Show)
 
 makeCard5 :: Card -> Card -> Card -> Card -> Card -> Card5
-makeCard5 c1 c2 c3 c4 c5 = Card5 $ sortOn rank [c1, c2, c3, c4, c5]
+makeCard5 c1 c2 c3 c4 c5 = Card5 $ sort [c1, c2, c3, c4, c5]
 
 -- 役を構成する部分の強弱を比べた上で残りのカードの強弱を比べる
 -- フルハウスは 3枚のほうから見る
 instance Ord Card5 where
   compare cs1 cs2 = undefined
+
+data Component =
+  Component { hand_ :: Hand, handCards :: [Card], restCards :: [Card] }
+
+splitAce :: Card5 -> [Card5]
+splitAce (Card5 cards) = map (\[c1,c2,c3,c4,c5] -> makeCard5 c1 c2 c3 c4 c5) $ mapM split cards
+  where
+    split :: Card -> [Card]
+    split (Card 1 suit) = [Card 1 suit, Card 14 suit]
+    split c             = [c]
+
+hand' :: Card5 -> Hand
+hand' cards = maximum $ map hand $ splitAce cards
 
 hand :: Card5 -> Hand
 hand cards
@@ -93,6 +99,12 @@ hand cards
   | isTwoPair cards                   = TwoPair
   | isOnePair cards                   = OnePair
   | otherwise                         = HighCard
+
+--                         役       残り
+parserStraight :: [Card] -> ([Card], [Card])
+parserStraight cards = undefined
+
+-- isStraight = not . null . fst . parserStraight
 
 isStraight :: Card5 -> Bool
 isStraight (Card5 cards) = isSequence $ map rank cards
@@ -127,6 +139,5 @@ allSame :: Eq a => [a] -> Bool
 allSame []     = True
 allSame (x:xs) = all (x ==) xs
 
--- ここでだけ 1 は一番小さい数にもなるので、ここでだけ特別扱いする
 isSequence :: (Eq a, Enum a) => [a] -> Bool
 isSequence xs@(x:_) = take (length xs) [x..] == xs
