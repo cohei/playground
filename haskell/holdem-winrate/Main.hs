@@ -1,8 +1,11 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Main where
 
-import           Data.List  (group, sort)
-import           Test.Hspec (describe, hspec, it, shouldBe)
+import           Data.Foldable (toList)
+import           Data.List     (group)
+import           Data.Set      (Set)
+import qualified Data.Set      as Set (fromList, map, size)
+import           Test.Hspec    (describe, hspec, it, shouldBe)
 
 main :: IO ()
 main = hspec $ do
@@ -12,13 +15,13 @@ main = hspec $ do
 
   describe "hand" $ do
     it "checks straight flush, 5" $ do
-      hand' (makeCard5 (spade 1) (spade 2) (spade 3) (spade 4) (spade 5)) `shouldBe` StraightFlush
+      hand (makeCard5 (spade 1) (spade 2) (spade 3) (spade 4) (spade 5)) `shouldBe` StraightFlush
     it "checks straight flush, Ace" $ do
-      hand' (makeCard5 (spade 1) (spade 13) (spade 12) (spade 11) (spade 10)) `shouldBe` StraightFlush
+      hand (makeCard5 (spade 1) (spade 13) (spade 12) (spade 11) (spade 10)) `shouldBe` StraightFlush
     it "checks full house" $ do
-      hand' (makeCard5 (spade 1) (heart 1) (club 1) (club 4) (spade 4)) `shouldBe` FullHouse
+      hand (makeCard5 (spade 1) (heart 1) (club 1) (club 4) (spade 4)) `shouldBe` FullHouse
     it "checks high card" $ do
-      hand' (makeCard5 (spade 1) (heart 9) (club 8) (diamond 4) (spade 5)) `shouldBe` HighCard
+      hand (makeCard5 (spade 1) (heart 9) (club 8) (diamond 4) (spade 5)) `shouldBe` HighCard
 
 data Suit = Club | Diamond | Heart | Spade
   deriving (Eq, Ord, Show)
@@ -62,13 +65,13 @@ data Hand =
   | StraightFlush
   deriving (Eq, Ord, Show)
 
--- 5枚、一意にするため、数字、次にスートの小さい順
 newtype Card5 =
-  Card5 [Card]
+  Card5 (Set Card)
   deriving (Eq, Show)
 
 makeCard5 :: Card -> Card -> Card -> Card -> Card -> Card5
-makeCard5 c1 c2 c3 c4 c5 = Card5 $ sort [c1, c2, c3, c4, c5]
+makeCard5 c1 c2 c3 c4 c5 =
+  Card5 $ Set.fromList [c1, c2, c3, c4, c5]
 
 -- 役を構成する部分の強弱を比べた上で残りのカードの強弱を比べる
 -- フルハウスは 3枚のほうから見る
@@ -79,17 +82,17 @@ data Component =
   Component { hand_ :: Hand, handCards :: [Card], restCards :: [Card] }
 
 splitAce :: Card5 -> [Card5]
-splitAce (Card5 cards) = map (\[c1,c2,c3,c4,c5] -> makeCard5 c1 c2 c3 c4 c5) $ mapM split cards
+splitAce (Card5 cards) = map (\[c1,c2,c3,c4,c5] -> makeCard5 c1 c2 c3 c4 c5) $ mapM split $ toList cards
   where
     split :: Card -> [Card]
     split (Card 1 suit) = [Card 1 suit, Card 14 suit]
     split c             = [c]
 
-hand' :: Card5 -> Hand
-hand' cards = maximum $ map hand $ splitAce cards
-
 hand :: Card5 -> Hand
-hand cards
+hand cards = maximum $ map handSingle $ splitAce cards
+
+handSingle :: Card5 -> Hand
+handSingle cards
   | isStraight cards && isFlush cards = StraightFlush
   | isFourOfAKind cards               = FourOfAKind
   | isFullHouse cards                 = FullHouse
@@ -107,37 +110,37 @@ parserStraight cards = undefined
 -- isStraight = not . null . fst . parserStraight
 
 isStraight :: Card5 -> Bool
-isStraight (Card5 cards) = isSequence $ map rank cards
+isStraight (Card5 cards) = isSequence $ Set.map rank cards
 
 isFlush :: Card5 -> Bool
-isFlush (Card5 cards) = allSame $ map suit cards
+isFlush (Card5 cards) = Set.size (Set.map suit cards) == 1
 
 isFourOfAKind :: Card5 -> Bool
 isFourOfAKind (Card5 cards) =
-  any ((== 4) . length) $ group $ map rank cards
+  any ((== 4) . length) $ group $ map rank $ toList cards
 
 isFullHouse :: Card5 -> Bool
 isFullHouse (Card5 cards) =
   let
-    ranks = group $ map rank cards
+    ranks = group $ map rank $ toList cards
   in
     any ((== 3) . length) ranks && any ((== 2) . length) ranks
 
 isThreeOfAKind :: Card5 -> Bool
 isThreeOfAKind (Card5 cards) =
-  any ((== 3) . length) $ group $ map rank cards
+  any ((== 3) . length) $ group $ map rank $ toList cards
 
 isTwoPair :: Card5 -> Bool
 isTwoPair (Card5 cards) =
-  (== 2) $ length $ filter ((== 2) . length) $ group $ map rank cards
+  (== 2) $ length $ filter ((== 2) . length) $ group $ map rank $ toList cards
 
 isOnePair :: Card5 -> Bool
 isOnePair (Card5 cards) =
-  any ((== 2) . length) $ group $ map rank cards
+  any ((== 2) . length) $ group $ map rank $ toList cards
 
-allSame :: Eq a => [a] -> Bool
-allSame []     = True
-allSame (x:xs) = all (x ==) xs
-
-isSequence :: (Eq a, Enum a) => [a] -> Bool
-isSequence xs@(x:_) = take (length xs) [x..] == xs
+isSequence :: (Foldable f, Eq a, Enum a) => f a -> Bool
+isSequence xs =
+  let
+    xs'@(x:_) = toList xs
+  in
+    take (length xs) [x..] == xs'

@@ -18,6 +18,7 @@ executable holdem-winrate
   -- other-modules:
   -- other-extensions:
   build-depends:       base ^>=4.12.0.0
+                     , containers
                      , hspec
   -- hs-source-dirs:
   default-language:    Haskell2010
