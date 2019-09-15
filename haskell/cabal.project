@@ -4,3 +4,6 @@ source-repository-package
     type: git
     location: https://github.com/cohei/haskell-utility.git
     tag: 9a96863
+
+constraints: refined -quickcheck
+allow-newer: refined:template-haskell
