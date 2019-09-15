@@ -3,7 +3,6 @@ module MapAccumWithState (mapAccumL, mapAccumR) where
 
 import           Control.Applicative.Backwards (Backwards (Backwards, forwards))
 import           Control.Monad.State           (runState, state)
-import           Data.Traversable              (traverse)
 import           Data.Tuple                    (swap)
 
 mapAccumL :: Traversable t => (a -> b -> (a, c)) -> a -> t b -> (a, t c)
