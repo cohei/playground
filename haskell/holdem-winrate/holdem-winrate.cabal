@@ -17,7 +17,7 @@ executable holdem-winrate
   main-is:             Main.hs
   -- other-modules:
   -- other-extensions:
-  build-depends:       base ^>=4.12.0.0
+  build-depends:       base ^>=4.13.0.0
                      , containers
                      , hspec
   -- hs-source-dirs:
