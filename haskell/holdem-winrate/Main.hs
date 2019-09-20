@@ -103,6 +103,25 @@ handSingle cards
   | isOnePair cards                   = OnePair
   | otherwise                         = HighCard
 
+data Part =
+    Kicker Rank
+  | Pair Rank
+  | ThreeOfAKind' Rank
+  | FourOfAKind' Rank
+  | Straight' Rank -- 一番大きいランク
+  | Flush'
+
+data Hand' =
+    HighCard'' (Set Rank)
+  | OnePair'' Rank (Set Rank)
+  | TwoPair'' Rank Rank (Set Rank)
+  | ThreeOfAKind'' Rank (Set Rank)
+  | Straight'' Rank
+  | Flush'' (Set Rank)
+  | FullHouse'' Rank Rank
+  | FourOfAKind'' Rank Rank
+  | StraightFlush'' Rank
+
 --                         役       残り
 parserStraight :: [Card] -> ([Card], [Card])
 parserStraight cards = undefined
