@@ -8,6 +8,7 @@ copyright:           "2018 TANIGUCHI Kohei"
 
 extra-source-files:
   - README.md
+  - package.yaml
 
 # To avoid duplicated efforts in documentation and dealing with the
 # complications of embedding Haddock markup inside cabal files, it is
@@ -74,3 +75,10 @@ tests:
       - hspec
       - IOSpec
       - QuickCheck
+
+build-type: Custom
+custom-setup:
+  dependencies:
+    - base
+    - Cabal
+    - hpack
