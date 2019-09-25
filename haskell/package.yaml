@@ -25,6 +25,9 @@ dependencies:
   - refined
   - transformers
   - utility
+  - path
+  - path-io
+  - filepath
 
 ghc-options:
   - -Wall
@@ -51,6 +54,9 @@ executables:
   janken:
     main: Main.hs
     source-dirs: app/janken
+  flattenDirectory:
+    main: Main.hs
+    source-dirs: app/flattenDirectory
 
 tests:
   playground-test:

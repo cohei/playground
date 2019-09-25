@@ -6,4 +6,7 @@ source-repository-package
     tag: 9a96863
 
 constraints: refined -quickcheck
-allow-newer: refined:template-haskell
+allow-newer:
+    refined:template-haskell
+  , path:hashable
+  , path-io:time
