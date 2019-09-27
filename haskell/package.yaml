@@ -19,15 +19,15 @@ dependencies:
   - array
   - containers
   - data-memocombinators
+  - filepath
   - MonadRandom
   - mtl
+  - path
+  - path-io
   - profunctors
   - refined
   - transformers
   - utility
-  - path
-  - path-io
-  - filepath
 
 ghc-options:
   - -Wall
