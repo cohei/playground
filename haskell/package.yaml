@@ -16,9 +16,11 @@ description:         Please see the README on GitHub at <https://github.com/cohe
 
 dependencies:
   - base >= 4.7 && < 5
+  - adjunctions
   - array
   - containers
   - data-memocombinators
+  - distributive
   - filepath
   - MonadRandom
   - mtl
@@ -26,6 +28,7 @@ dependencies:
   - path-io
   - profunctors
   - refined
+  - Stream
   - transformers
   - utility
 
