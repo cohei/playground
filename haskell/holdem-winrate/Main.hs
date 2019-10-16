@@ -1,11 +1,15 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE ViewPatterns               #-}
 module Main where
 
-import           Data.Foldable (toList)
-import           Data.List     (group)
-import           Data.Set      (Set)
-import qualified Data.Set      as Set (fromList, map, size)
-import           Test.Hspec    (describe, hspec, it, shouldBe)
+import           Data.Bifunctor (first)
+import           Data.Foldable  (toList)
+import           Data.List      (group)
+import           Data.Set       (Set, (\\))
+import qualified Data.Set       as S (delete, deleteFindMin, empty, filter,
+                                      findMax, findMin, fromList, insert, map,
+                                      minView, null, singleton, size)
+import           Test.Hspec     (describe, hspec, it, shouldBe)
 
 main :: IO ()
 main = hspec $ do
@@ -14,13 +18,13 @@ main = hspec $ do
       splitAce (makeCard5 (spade 1) (spade 2) (spade 3) (spade 4) (spade 5)) `shouldBe` [makeCard5 (spade 1) (spade 2) (spade 3) (spade 4) (spade 5), makeCard5 (spade 14) (spade 2) (spade 3) (spade 4) (spade 5)]
 
   describe "hand" $ do
-    it "checks straight flush, 5" $ do
+    it "checks straight flush, 5" $
       hand (makeCard5 (spade 1) (spade 2) (spade 3) (spade 4) (spade 5)) `shouldBe` StraightFlush
-    it "checks straight flush, Ace" $ do
+    it "checks straight flush, Ace" $
       hand (makeCard5 (spade 1) (spade 13) (spade 12) (spade 11) (spade 10)) `shouldBe` StraightFlush
-    it "checks full house" $ do
+    it "checks full house" $
       hand (makeCard5 (spade 1) (heart 1) (club 1) (club 4) (spade 4)) `shouldBe` FullHouse
-    it "checks high card" $ do
+    it "checks high card" $
       hand (makeCard5 (spade 1) (heart 9) (club 8) (diamond 4) (spade 5)) `shouldBe` HighCard
 
 data Suit = Club | Diamond | Heart | Spade
@@ -71,7 +75,7 @@ newtype Card5 =
 
 makeCard5 :: Card -> Card -> Card -> Card -> Card -> Card5
 makeCard5 c1 c2 c3 c4 c5 =
-  Card5 $ Set.fromList [c1, c2, c3, c4, c5]
+  Card5 $ S.fromList [c1, c2, c3, c4, c5]
 
 -- 役を構成する部分の強弱を比べた上で残りのカードの強弱を比べる
 -- フルハウスは 3枚のほうから見る
@@ -110,6 +114,7 @@ data Part =
   | FourOfAKind' Rank
   | Straight' Rank -- 一番大きいランク
   | Flush'
+  deriving (Eq, Ord)
 
 data Hand' =
     HighCard'' (Set Rank)
@@ -122,17 +127,31 @@ data Hand' =
   | FourOfAKind'' Rank Rank
   | StraightFlush'' Rank
 
---                         役       残り
-parserStraight :: [Card] -> ([Card], [Card])
-parserStraight cards = undefined
+--                                  役       残り
+parserStraight :: Set Card -> Set (Part, Set Card)
+parserStraight cards =
+  S.map (\card5 -> (Straight' $ S.findMax $ S.map rank card5, cards \\ card5)) $
+  S.filter (isSequence . S.map rank) $
+  pick 5 cards
 
 -- isStraight = not . null . fst . parserStraight
 
+pick :: Ord a => Int -> Set a -> Set (Set a)
+pick 0 xs = S.singleton S.empty
+pick _ xs | S.null xs = S.empty
+pick n (S.deleteFindMin -> (x, xs)) = S.map (S.insert x) (pick (n - 1) xs) <> pick n xs
+
 isStraight :: Card5 -> Bool
-isStraight (Card5 cards) = isSequence $ Set.map rank cards
+isStraight (Card5 cards) = isSequence $ S.map rank cards
 
 isFlush :: Card5 -> Bool
-isFlush (Card5 cards) = Set.size (Set.map suit cards) == 1
+isFlush (Card5 cards) = S.size (S.map suit cards) == 1
+
+parserFlush :: Set Card -> Set (Part, Set Card)
+parserFlush cards =
+  S.map (\card5 -> (Flush', cards \\ card5)) $
+  S.filter (\card5 -> S.size (S.map suit card5) == 1) $
+  pick 5 cards
 
 isFourOfAKind :: Card5 -> Bool
 isFourOfAKind (Card5 cards) =
