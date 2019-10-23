@@ -127,6 +127,13 @@ data Hand' =
   | FourOfAKind'' Rank Rank
   | StraightFlush'' Rank
 
+-- Set Part -> Hand'
+-- Hand' は二次的なもの
+
+-- 7 -> 5
+-- 強弱の判定に必要な情報が欲しい
+-- 役、最大ランク、ほかのカード = Set Part
+
 --                                  役       残り
 parserStraight :: Set Card -> Set (Part, Set Card)
 parserStraight cards =
