@@ -30,6 +30,7 @@ dependencies:
   - profunctors
   - refined
   - Stream
+  - time
   - transformers
   - utility
 
@@ -75,6 +76,11 @@ tests:
       - hspec
       - IOSpec
       - QuickCheck
+  doctest:
+    main: Main.hs
+    source-dirs: test/doctest
+    dependencies:
+      - doctest
 
 build-type: Custom
 custom-setup:

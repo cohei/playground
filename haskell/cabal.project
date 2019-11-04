@@ -10,3 +10,5 @@ allow-newer:
     refined:template-haskell
   , path:hashable
   , path-io:time
+
+test-show-details: streaming
