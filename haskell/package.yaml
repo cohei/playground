@@ -23,6 +23,7 @@ dependencies:
   - data-memocombinators
   - distributive
   - filepath
+  - membership
   - MonadRandom
   - mtl
   - path
