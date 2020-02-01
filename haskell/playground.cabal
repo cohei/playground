@@ -122,11 +122,11 @@ test-suite doctest
   build-depends:
       doctest
 
-test-suite playground-test
+test-suite spec
   import: common, warning
   type: exitcode-stdio-1.0
-  hs-source-dirs: test
-  main-is: Spec.hs
+  hs-source-dirs: test/spec
+  main-is: Main.hs
   other-modules:
       ApproximationSpec
       FizzBuzzSpec

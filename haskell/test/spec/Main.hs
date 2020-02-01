@@ -1,3 +1,5 @@
+module Main (main) where
+
 import           Test.Hspec             (describe, hspec)
 
 import qualified ApproximationSpec      (spec)
