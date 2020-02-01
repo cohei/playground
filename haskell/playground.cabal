@@ -1,0 +1,143 @@
+cabal-version: 2.2
+
+name:           playground
+version:        0.1.0.0
+description:    Please see the README on GitHub at <https://github.com/cohei/playground/tree/master/haskell#playground>
+homepage:       https://github.com/cohei/playground#readme
+bug-reports:    https://github.com/cohei/playground/issues
+author:         TANIGUCHI Kohei
+maintainer:     a.d.xvii.kal.mai@gmail.com
+copyright:      2018 TANIGUCHI Kohei
+license:        BSD-3-Clause
+license-file:   LICENSE
+build-type:     Simple
+extra-source-files:
+    README.md
+
+source-repository head
+  type: git
+  location: https://github.com/cohei/playground
+
+common common
+  build-depends: base >= 4.7 && < 5
+  default-language: Haskell2010
+
+common warning
+  ghc-options:
+    -Wall
+    -Wcompat
+    -Widentities
+    -Wincomplete-record-updates
+    -Wincomplete-uni-patterns
+    -- -Wmissing-export-lists
+    -Wmissing-home-modules
+    -Wmissing-import-lists
+    -Wmissing-local-signatures
+    -Wmonomorphism-restriction
+    -Wpartial-fields
+    -Wredundant-constraints
+    -fdefer-typed-holes
+
+library
+  import: common, warning
+  hs-source-dirs: src
+  exposed-modules:
+      AccumulatorGenerator
+      Applicative2
+      Approximation
+      AssociatedType
+      AstGadt
+      AutomatonCategory
+      Bifold
+      DataAsFunction
+      DayConvolution
+      DesignForTestability
+      Failable
+      FizzBuzz.FizzBuzz
+      FizzBuzz.Nabeatsu
+      FizzBuzz.Rule
+      HontohaSugoiNewtype
+      LensesEmbodyProductsPrismsEmbodySums
+      LevityPolymorphism
+      MapAccumRPascal
+      MapAccumWithState
+      MonadWithDefault
+      NumberPlate
+      OpenRecursion
+      Profunctor
+      Representable
+      Size
+      StateTransition
+      Tightrope
+      Wa.Monoid
+      Wa.Reader
+      WIP.SevenQueens
+  build-depends:
+      MonadRandom
+    , Stream
+    , adjunctions
+    , array
+    , containers
+    , data-memocombinators
+    , distributive
+    , filepath
+    , membership
+    , mtl
+    , path
+    , path-io
+    , profunctors
+    , refined
+    , time
+    , transformers
+    , utility
+
+executable flattenDirectory
+  import: common, warning
+  hs-source-dirs: app/flattenDirectory
+  main-is: Main.hs
+  build-depends:
+      filepath
+    , path
+    , path-io
+
+executable janken
+  import: common, warning
+  hs-source-dirs: app/janken
+  main-is: Main.hs
+  build-depends:
+      MonadRandom
+
+executable zundoko
+  import: common, warning
+  hs-source-dirs: app/zundoko
+  main-is: Main.hs
+  build-depends:
+      MonadRandom
+
+test-suite doctest
+  import: common, warning
+  type: exitcode-stdio-1.0
+  hs-source-dirs: test/doctest
+  main-is: Main.hs
+  build-depends:
+      doctest
+
+test-suite playground-test
+  import: common, warning
+  type: exitcode-stdio-1.0
+  hs-source-dirs: test
+  main-is: Spec.hs
+  other-modules:
+      ApproximationSpec
+      FizzBuzzSpec
+      IOSpec
+      LevityPolymorphismSpec
+      MapAccumWithStateSpec
+      SizeSpec
+      Wa.MonoidSpec
+      Wa.ReaderSpec
+  build-depends:
+      IOSpec
+    , QuickCheck
+    , hspec
+    , playground
