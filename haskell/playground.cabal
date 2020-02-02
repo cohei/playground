@@ -62,6 +62,7 @@ library
       MapAccumRPascal
       MapAccumWithState
       MonadWithDefault
+      MutableStateInHaskell
       NumberPlate
       OpenRecursion
       Profunctor
@@ -85,8 +86,10 @@ library
     , mtl
     , path
     , path-io
+    , primitive
     , profunctors
     , refined
+    , stm
     , time
     , transformers
     , utility
@@ -133,6 +136,7 @@ test-suite spec
       IOSpec
       LevityPolymorphismSpec
       MapAccumWithStateSpec
+      MutableStateInHaskellSpec
       SizeSpec
       Wa.MonoidSpec
       Wa.ReaderSpec
