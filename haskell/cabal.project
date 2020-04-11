@@ -12,3 +12,4 @@ allow-newer:
   , path-io:time
 
 test-show-details: streaming
+test-options: --color
