@@ -51,6 +51,7 @@ library
       Bifold
       DataAsFunction
       DayConvolution
+      DelimitedContinuation
       DesignForTestability
       Failable
       FizzBuzz.FizzBuzz
@@ -75,7 +76,8 @@ library
       Wa.Reader
       WIP.SevenQueens
   build-depends:
-      MonadRandom
+      CC-delcont
+    , MonadRandom
     , Stream
     , adjunctions
     , array

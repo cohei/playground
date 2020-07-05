@@ -13,3 +13,6 @@ allow-newer:
 
 test-show-details: streaming
 test-options: --color
+
+-- for doctest
+write-ghc-environment-files: always
