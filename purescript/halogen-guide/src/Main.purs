@@ -2,8 +2,11 @@ module Main where
 
 import Prelude
 
-import Data.Maybe (Maybe(..))
+import Data.Int (round)
+import Data.Maybe (Maybe(Nothing, Just), maybe)
 import Effect (Effect)
+import Effect.Class (class MonadEffect)
+import Effect.Random (random)
 import Halogen as H
 import Halogen.Aff as HA
 import Halogen.HTML as HH
@@ -15,9 +18,10 @@ main = HA.runHalogenAff do
   body <- HA.awaitBody
   runUI component unit body
 
-data Action = Increment | Decrement
+type State = Maybe Int
+data Action = Increment | Decrement | Regenerate
 
-component :: forall query i o m.  H.Component HH.HTML query i o m
+component :: forall query i o m. MonadEffect m => H.Component HH.HTML query i o m
 component =
   H.mkComponent
     { initialState
@@ -25,18 +29,25 @@ component =
     , eval: H.mkEval $ H.defaultEval { handleAction = handleAction }
     }
   where
-  initialState :: i -> Int
-  initialState _ = 0
+  initialState :: i -> State
+  initialState _ = Nothing
 
-  render :: Int -> H.ComponentHTML Action () m
+  render :: State -> H.ComponentHTML Action () m
   render state =
-    HH.div_
-      [ HH.button [ HE.onClick \_ -> Just Decrement ] [ HH.text "-" ]
-      , HH.div_ [ HH.text $ show state ]
-      , HH.button [ HE.onClick \_ -> Just Increment ] [ HH.text "+" ]
-      ]
+    let
+      value = maybe "No number generated yet" show state
+    in
+     HH.div_
+     [ HH.button [ HE.onClick \_ -> Just Decrement ] [ HH.text "-" ]
+     , HH.div_ [ HH.text value ]
+     , HH.button [ HE.onClick \_ -> Just Increment ] [ HH.text "+" ]
+     , HH.button [ HE.onClick \_ -> Just Regenerate ] [ HH.text "Generate new number" ]
+     ]
 
-  handleAction :: Action -> H.HalogenM Int Action () o m Unit
+  handleAction :: Action -> H.HalogenM State Action () o m Unit
   handleAction = case _ of
-    Increment -> H.modify_ (_ + 1)
-    Decrement -> H.modify_ (_ - 1)
+    Increment -> H.modify_ $ map (_ + 1)
+    Decrement -> H.modify_ $ map (_ - 1)
+    Regenerate -> do
+      newNumber <- H.liftEffect random
+      H.modify_ $ const $ Just $ round $ newNumber * 10.0
