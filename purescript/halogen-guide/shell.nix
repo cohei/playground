@@ -5,7 +5,7 @@ let
     owner = "justinwoo";
     repo = "easy-purescript-nix";
     rev = "master";
-    sha256 = "0gnwymgm4i5y9vknpcsr99pwy76w14nclqxb6xmmzlw2s8fx85hm";
+    sha256 = "014v2sk3r2x4j2g92pj70r8kyknzkycd8y04m4i66nnjr1xvr3ch";
   }) { inherit pkgs; };
 in
 pkgs.mkShell {
