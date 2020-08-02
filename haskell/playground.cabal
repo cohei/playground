@@ -67,6 +67,7 @@ library
       MutableStateInHaskell
       NumberPlate
       OpenRecursion
+      Prism
       Profunctor
       Representable
       Size
