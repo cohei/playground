@@ -4,6 +4,7 @@ import           Test.Hspec                                         (describe,
                                                                      hspec)
 
 import qualified ApproximationSpec                                  (spec)
+import qualified DeleteMinSpec                                      (spec)
 import qualified FizzBuzzSpec                                       (spec)
 import qualified IOSpec                                             (spec)
 import qualified IsItWrongToWantScalaToHaveExistentialOperatorsSpec (spec)
@@ -17,6 +18,7 @@ import qualified Wa.ReaderSpec                                      (spec)
 main :: IO ()
 main = hspec $ do
   describe "Approximation" ApproximationSpec.spec
+  describe "DeleteMinSpec" DeleteMinSpec.spec
   describe "FizzBuzz" FizzBuzzSpec.spec
   describe "IOSpec" IOSpec.spec
   describe "IsItWrongToWantScalaToHaveExistentialOperators" IsItWrongToWantScalaToHaveExistentialOperatorsSpec.spec

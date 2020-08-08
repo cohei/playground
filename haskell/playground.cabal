@@ -51,6 +51,7 @@ library
       Bifold
       DataAsFunction
       DayConvolution
+      DeleteMin
       DelimitedContinuation
       DesignForTestability
       Failable
@@ -93,6 +94,7 @@ library
     , path-io
     , primitive
     , profunctors
+    , recursion-schemes
     , refined
     , stm
     , time
@@ -137,6 +139,7 @@ test-suite spec
   main-is: Main.hs
   other-modules:
       ApproximationSpec
+      DeleteMinSpec
       FizzBuzzSpec
       IOSpec
       IsItWrongToWantScalaToHaveExistentialOperatorsSpec
@@ -147,8 +150,9 @@ test-suite spec
       Wa.MonoidSpec
       Wa.ReaderSpec
   build-depends:
-      IOSpec
-    , QuickCheck
-    , hspec
+      hspec
+    , IOSpec
     , lens
     , playground
+    , QuickCheck
+    , quickcheck-instances
