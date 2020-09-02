@@ -10,6 +10,7 @@ import Data.Int (round)
 import Data.Int as Int
 import Data.Maybe (Maybe(Nothing, Just), maybe)
 import Data.String (length)
+import Data.Symbol (SProxy(SProxy))
 import Effect (Effect)
 import Effect.Aff (Milliseconds(Milliseconds))
 import Effect.Aff as Aff
@@ -38,6 +39,11 @@ main = HA.runHalogenAff do
   body <- HA.awaitBody
   runUI component unit body
 
+type Slots = ( button :: H.Slot ButtonQuery ButtonOutput Int )
+
+_button :: SProxy "button"
+_button = SProxy
+
 type State = { n :: Maybe Int, username :: String, loading :: Boolean }
 data Action
   = Increment
@@ -49,6 +55,7 @@ data Action
   | Finalize
   | Tick
   | HandleKey H.SubscriptionId KE.KeyboardEvent
+  | HandleButton ButtonOutput
 
 component :: forall query i o m. MonadAff m => H.Component HH.HTML query i o m
 component =
@@ -65,7 +72,7 @@ component =
   initialState :: i -> State
   initialState _ = { n: Nothing, username: "", loading: false }
 
-  render :: State -> H.ComponentHTML Action () m
+  render :: State -> H.ComponentHTML Action Slots m
   render state =
     let
       value = maybe "No number generated yet" show state.n
@@ -89,9 +96,10 @@ component =
        [ HH.p_ [ HH.text "Type some digits!" ]
        , HH.p_ [ HH.text "Press ENTER or RETURN to clear and remove the event listener." ]
        ]
+     , HH.div_ [ HH.slot _button 0 button { label: "Click me" <> maybe "" (\n -> " (" <> show n <> ")") state.n } (Just <<< HandleButton) ]
      ]
 
-  handleAction :: Action -> H.HalogenM State Action () o m Unit
+  handleAction :: Action -> H.HalogenM State Action Slots o m Unit
   handleAction = case _ of
     Increment -> H.modify_ \state -> state { n = map (_ + 1) state.n }
     Decrement -> H.modify_ \state -> state { n = map (_ - 1) state.n }
@@ -120,6 +128,8 @@ component =
           (HTMLDocument.toEventTarget document)
           (map (HandleKey sid) <<< KE.fromEvent)
 
+      _ <- H.query _button 0 $ Tell unit
+
       pure unit
     Finalize -> do
       newNumber <- H.gets _.n
@@ -136,6 +146,9 @@ component =
           when (length char == 1) do
             let mInt = Int.fromString char
             maybe (pure unit) (\i -> H.modify_ \state -> state { n = Just i }) mInt
+    HandleButton output ->
+      case output of
+        Clicked -> H.modify_ \state -> state { n = map (_ + 1) state.n }
 
 timer :: forall m. MonadAff m => EventSource m Action
 timer = EventSource.affEventSource \emitter -> do
@@ -144,3 +157,37 @@ timer = EventSource.affEventSource \emitter -> do
     EventSource.emit emitter Tick
 
   pure $ EventSource.Finalizer $ Aff.killFiber (error "Event source finalized") fiber
+
+type ButtonInput = { label :: String }
+type ButtonState = { label :: String }
+data ButtonAction = Receive ButtonInput | Click
+data ButtonOutput = Clicked
+data ButtonQuery a = Tell a | Request (Boolean -> a)
+
+button :: forall m. H.Component HH.HTML ButtonQuery ButtonInput ButtonOutput m
+button =
+  H.mkComponent
+    { initialState
+    , render
+    , eval: H.mkEval $ H.defaultEval
+        { handleAction = handleAction
+        , handleQuery = handleQuery
+        , receive = Just <<< Receive
+        }
+    }
+  where
+    initialState :: ButtonInput -> ButtonState
+    initialState input = input
+
+    render :: ButtonState -> H.ComponentHTML ButtonAction () m
+    render { label } = HH.button [ HE.onClick \_ -> Just Click ] [ HH.text label ]
+
+    handleAction :: ButtonAction -> H.HalogenM ButtonState ButtonAction () ButtonOutput m Unit
+    handleAction = case _ of
+      Receive input -> H.modify_ _ { label = input.label }
+      Click -> H.raise Clicked
+
+    handleQuery :: forall a. ButtonQuery a -> H.HalogenM ButtonState ButtonAction () ButtonOutput m (Maybe a)
+    handleQuery = case _ of
+      Tell a -> pure (Just a)
+      Request reply -> pure (Just (reply true))
