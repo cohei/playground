@@ -50,6 +50,7 @@ library
       AutomatonCategory
       Bifold
       DataAsFunction
+      DataTypesALaCarte
       DayConvolution
       DeleteMin
       DelimitedContinuation
@@ -84,9 +85,11 @@ library
     , adjunctions
     , array
     , containers
+    , data-fix
     , data-memocombinators
     , distributive
     , filepath
+    , free
     , lens
     , membership
     , mtl
