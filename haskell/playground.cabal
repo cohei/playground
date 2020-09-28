@@ -113,6 +113,13 @@ executable flattenDirectory
     , path
     , path-io
 
+executable helloWorldThread
+  import: common, warning
+  hs-source-dirs: app/helloWorldThread
+  main-is: Main.hs
+  build-depends:
+      stm
+
 executable janken
   import: common, warning
   hs-source-dirs: app/janken
