@@ -5,12 +5,6 @@ source-repository-package
     location: https://github.com/cohei/haskell-utility.git
     tag: 9a96863
 
-constraints: refined -quickcheck
-allow-newer:
-    refined:template-haskell
-  , path:hashable
-  , path-io:time
-
 test-show-details: streaming
 test-options: --color
 
