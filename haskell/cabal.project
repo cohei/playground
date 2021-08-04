@@ -10,3 +10,12 @@ test-options: --color
 
 -- for doctest
 write-ghc-environment-files: always
+
+-- To build with GHC 9, `refined` and its dependency `these-skinny` need a hack
+source-repository-package
+    type: git
+    location: https://github.com/nikita-volkov/refined.git
+    tag: de3404abe359dc9eb28430df1836b1b02f0c82b0
+
+allow-newer:
+    these-skinny:base
