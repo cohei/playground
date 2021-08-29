@@ -166,3 +166,11 @@ test-suite spec
     , playground
     , QuickCheck
     , quickcheck-instances
+
+benchmark lazy-pattern
+  import: common, warning
+  type: exitcode-stdio-1.0
+  hs-source-dirs: benchmark/lazy-pattern
+  main-is: Main.hs
+  build-depends:
+      criterion
