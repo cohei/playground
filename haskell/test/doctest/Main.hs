@@ -1,11 +1,1 @@
-module Main (main) where
-
-import           Test.DocTest (doctest)
-
-main :: IO ()
-main =
-  doctest
-  [ "src/DelimitedContinuation.hs"
-  , "src/DesignForTestability.hs"
-  , "src/Xor.hs"
-  ]
+{-# OPTIONS_GHC -F -pgmF doctest-driver-gen -optF src #-}

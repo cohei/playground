@@ -144,6 +144,10 @@ test-suite doctest
   main-is: Main.hs
   build-depends:
       doctest
+  build-tool-depends:
+    doctest-driver-gen:doctest-driver-gen
+  ghc-options:
+    -Wno-missing-import-lists
 
 test-suite spec
   import: common, warning
