@@ -7,4 +7,5 @@ main =
   doctest
   [ "src/DelimitedContinuation.hs"
   , "src/DesignForTestability.hs"
+  , "src/Xor.hs"
   ]

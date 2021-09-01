@@ -78,6 +78,7 @@ library
       Wa.Monoid
       Wa.Reader
       WIP.SevenQueens
+      Xor
   build-depends:
       CC-delcont
     , MonadRandom
@@ -90,6 +91,7 @@ library
     , distributive
     , filepath
     , free
+    , group-theory
     , lens
     , membership
     , mtl
@@ -97,6 +99,7 @@ library
     , path-io
     , primitive
     , profunctors
+    , QuickCheck
     , recursion-schemes
     , refined
     , stm
