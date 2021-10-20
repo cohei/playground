@@ -43,7 +43,6 @@ library
   hs-source-dirs: src
   exposed-modules:
       AccumulatorGenerator
-      Applicative2
       Approximation
       AssociatedType
       AstGadt
@@ -61,6 +60,7 @@ library
       FizzBuzz.Rule
       HontohaSugoiNewtype
       IsItWrongToWantScalaToHaveExistentialOperators
+      LaxMonoidalFunctor
       LensesEmbodyProductsPrismsEmbodySums
       LevityPolymorphism
       MapAccumRPascal
