@@ -48,6 +48,7 @@ library
       AstGadt
       AutomatonCategory
       Bifold
+      Corecursion
       DataAsFunction
       DataTypesALaCarte
       DayConvolution
