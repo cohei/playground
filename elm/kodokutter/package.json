@@ -3,6 +3,6 @@
   "description": "install elm compiler",
   "license": "MIT",
   "devDependencies": {
-    "elm": "latest-0.19.1"
+    "elm": "^0.19.1-5"
   }
 }
