@@ -6,6 +6,7 @@ import           Test.Hspec                                         (describe,
 import qualified ApproximationSpec                                  (spec)
 import qualified DeleteMinSpec                                      (spec)
 import qualified FizzBuzzSpec                                       (spec)
+import qualified FoldToTreeSpec                                     (spec)
 import qualified IOSpec                                             (spec)
 import qualified IsItWrongToWantScalaToHaveExistentialOperatorsSpec (spec)
 import qualified LevityPolymorphismSpec                             (spec)
@@ -20,6 +21,7 @@ main = hspec $ do
   describe "Approximation" ApproximationSpec.spec
   describe "DeleteMinSpec" DeleteMinSpec.spec
   describe "FizzBuzz" FizzBuzzSpec.spec
+  describe "FoldToTree" FoldToTreeSpec.spec
   describe "IOSpec" IOSpec.spec
   describe "IsItWrongToWantScalaToHaveExistentialOperators" IsItWrongToWantScalaToHaveExistentialOperatorsSpec.spec
   describe "LevityPolymorphism" LevityPolymorphismSpec.spec

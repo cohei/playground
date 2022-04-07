@@ -66,6 +66,7 @@ library
       FizzBuzz.FizzBuzz
       FizzBuzz.Nabeatsu
       FizzBuzz.Rule
+      FoldToTree
       Free
       HexagonalArchitecture
       HontohaSugoiNewtype
@@ -178,6 +179,7 @@ test-suite spec
       ApproximationSpec
       DeleteMinSpec
       FizzBuzzSpec
+      FoldToTreeSpec
       IOSpec
       IsItWrongToWantScalaToHaveExistentialOperatorsSpec
       LevityPolymorphismSpec
@@ -188,6 +190,7 @@ test-suite spec
       Wa.ReaderSpec
   build-depends:
       hspec
+    , containers
     , IOSpec
     , lens
     , playground
