@@ -48,6 +48,7 @@ library
       AstGadt
       AutomatonCategory
       Bifold
+      Categories
       Corecursion
       DataAsFunction
       DataTypesALaCarte
@@ -60,7 +61,6 @@ library
       FizzBuzz.Nabeatsu
       FizzBuzz.Rule
       HontohaSugoiNewtype
-      InitialTerminalObject
       IsItWrongToWantScalaToHaveExistentialOperators
       LaxMonoidalFunctor
       LensesEmbodyProductsPrismsEmbodySums
