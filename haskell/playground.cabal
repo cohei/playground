@@ -55,6 +55,7 @@ library
       DayConvolution
       DeleteMin
       DelimitedContinuation
+      DependencyInjection
       DesignForTestability
       Failable
       FizzBuzz.FizzBuzz
