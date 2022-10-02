@@ -76,6 +76,7 @@ library
       Prism
       Profunctor
       Representable
+      SeeminglyImpossible
       Size
       StateTransition
       Tightrope
