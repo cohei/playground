@@ -46,6 +46,8 @@ library
       Approximation
       AssociatedType
       AstGadt
+      ATaleOfTwoBrackets1
+      ATaleOfTwoBrackets2
       AutomatonCategory
       Bifold
       Categories
@@ -100,6 +102,7 @@ library
     , group-theory
     , lens
     , membership
+    , monad-control
     , mtl
     , path
     , path-io
@@ -111,6 +114,8 @@ library
     , stm
     , time
     , transformers
+    , transformers-base
+    , unix
     , utility
 
 executable flattenDirectory
