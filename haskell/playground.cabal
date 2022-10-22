@@ -63,6 +63,7 @@ library
       FizzBuzz.FizzBuzz
       FizzBuzz.Nabeatsu
       FizzBuzz.Rule
+      HexagonalArchitecture
       HontohaSugoiNewtype
       IsItWrongToWantScalaToHaveExistentialOperators
       LaxMonoidalFunctor
