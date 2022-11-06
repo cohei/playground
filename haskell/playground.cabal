@@ -52,6 +52,7 @@ library
       Bifold
       Categories
       Corecursion
+      Coroutine
       DataAsFunction
       DataTypesALaCarte
       DayConvolution
