@@ -1,8 +1,8 @@
+{-# LANGUAGE ConstraintKinds #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE FunctionalDependencies #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
-{-# LANGUAGE LambdaCase #-}
-{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE StandaloneKindSignatures #-}
 {-# LANGUAGE TupleSections #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE TypeOperators #-}
@@ -14,53 +14,51 @@ module LaxMonoidalFunctor where
 import Control.Applicative (liftA2)
 import Control.Lens (Iso', iso)
 import Data.Bifunctor (Bifunctor)
-import Data.Kind (Type)
+import Data.Bifunctor.Assoc (Assoc)
+import Data.Kind (Type, Constraint)
 import Data.Void (Void, absurd)
 import Prelude hiding (product, (**))
 
 -- $setup
 -- >>> import Control.Lens (view)
 -- >>> import Data.Bifunctor (first, second)
+-- >>> import Data.Bifunctor.Assoc (Assoc(assoc, unassoc))
+
+class Bifunctor p => Unital p where
+  type Unit p :: Type
+  -- data Unit p :: Type
+
+  leftUniter :: Iso' (Unit p `p` a) a
+  rightUniter :: Iso' (a `p` Unit p) a
+
+instance Unital (,) where
+  type Unit (,) = ()
+  -- data Unit (,) = ProductUnit ()
+
+  leftUniter = iso snd ((),)
+  rightUniter = iso fst (,())
+  -- leftUniter = iso (\(ProductUnit (), a) -> a) (ProductUnit (),)
+  -- rightUniter = iso (\(a, ProductUnit ()) -> a) (, ProductUnit ())
+
+instance Unital Either where
+  type Unit Either = Void
+  -- data Unit Either = SumUnit Void
+
+  leftUniter = iso (either absurd id) Right
+  rightUniter = iso (either id absurd) Left
 
 -- |
 -- Monoid product of Hask category. It satisfies axioms below.
 --
 -- triangle identity:
 --
--- prop> (second (view leftUniter) . view associator) object == first (view rightUniter) (object :: ((Int, ()), Char))
+-- prop> (second (view leftUniter) . assoc) object == first (view rightUniter) (object :: ((Int, ()), Char))
 --
 -- pentagon identity:
 --
--- prop> (second (view associator) . view associator . first (view associator)) object == (view associator . view associator) (object :: (((Int, Char), Double), Bool))
-class Bifunctor p => Monoidal p where
-  type Unit p :: Type
-  -- data Unit p :: Type
-
-  associator :: Iso' ((a `p` b) `p` c) (a `p` (b `p` c))
-  leftUniter :: Iso' (Unit p `p` a) a
-  rightUniter :: Iso' (a `p` Unit p) a
-
-instance Monoidal (,) where
-  type Unit (,) = ()
-  -- data Unit (,) = ProductUnit ()
-
-  associator = iso (\((a, b), c) -> (a, (b, c))) (\(a, (b, c)) -> ((a, b), c))
-  leftUniter = iso (\((), a) -> a) ((),)
-  rightUniter = iso (\(a, ()) -> a) (,())
-
--- leftUniter = iso (\(ProductUnit (), a) -> a) (ProductUnit (),)
--- rightUniter = iso (\(a, ProductUnit ()) -> a) (, ProductUnit ())
-
-instance Monoidal Either where
-  type Unit Either = Void
-  -- data Unit Either = SumUnit Void
-
-  associator =
-    iso
-      (either (either Left (Right . Left)) (Right . Right))
-      (either (Left . Left) (either (Left . Right) Right))
-  leftUniter = iso (either absurd id) Right
-  rightUniter = iso (either id absurd) Left
+-- prop> (second assoc . assoc . first assoc) object == (assoc . assoc) (object :: (((Int, Char), Double), Bool))
+type Monoidal :: (Type -> Type -> Type) -> Constraint
+type Monoidal p = (Unital p, Assoc p)
 
 class (Monoidal m, Functor f) => LaxMonoidalFunctor m f | f -> m where
   unit :: Unit m -> f (Unit m)

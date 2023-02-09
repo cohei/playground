@@ -94,6 +94,7 @@ library
     , Stream
     , adjunctions
     , array
+    , assoc
     , categories
     , containers
     , data-fix
