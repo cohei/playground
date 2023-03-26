@@ -64,7 +64,7 @@ eq :: Natural -> Cantor -> Cantor -> Bool
 eq n c1 c2 = all (\n' -> c1 n' == c2 n') [0 .. (if n == 0 then 0 else pred n)]
 
 modulus :: Eq a => (Cantor -> a) -> Natural
-modulus f = least $ \n -> allCantor $ \c1 -> allCantor $ \c2 -> eq n c1 c2 --> (f c1 == f c2)
+modulus c = least $ \n -> allCantor $ \c1 -> allCantor $ \c2 -> eq n c1 c2 --> (c c1 == c c2)
 
 projection :: Natural -> Cantor -> Natural
 projection n c = b2n (c n)

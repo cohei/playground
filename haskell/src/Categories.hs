@@ -20,7 +20,7 @@ import Control.Category.Monoidal (Monoidal (Id))
 import Data.Functor.Identity ()
 import Data.Void (Void, absurd)
 
-import Prelude hiding ((.))
+import Prelude (Monad, const, type (~))
 
 instance HasInitialObject (->) where
   type Initial (->) = Void

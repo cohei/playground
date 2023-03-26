@@ -29,7 +29,7 @@ instance (Functor f, Functor g) => f :<: Sum f g where
   project (InL x) = Just x
   project (InR _) = Nothing
 
-instance {-# OVERLAPPABLE #-} (Functor f, Functor g, Functor h, f :<: h) => f :<: Sum g h where
+instance {-# OVERLAPPABLE #-} (Functor g, f :<: h) => f :<: Sum g h where
   inject = InR . inject
   project (InL _) = Nothing
   project (InR x) = project x
