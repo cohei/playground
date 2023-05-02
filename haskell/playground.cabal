@@ -60,6 +60,7 @@ library
       DelimitedContinuation
       DependencyInjection
       DesignForTestability
+      DistanceFetcher
       Failable
       FizzBuzz.FizzBuzz
       FizzBuzz.Nabeatsu
@@ -99,6 +100,7 @@ library
     , categories
     , comonad
     , containers
+    , data-default-class
     , data-fix
     , data-memocombinators
     , distributive
@@ -114,6 +116,7 @@ library
     , primitive
     , profunctors
     , QuickCheck
+    , random
     , recursion-schemes
     , refined
     , stm
