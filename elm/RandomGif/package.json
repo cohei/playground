@@ -1,8 +1,0 @@
-{
-  "name": "install-elm",
-  "description": "install elm compiler",
-  "license": "MIT",
-  "devDependencies": {
-    "elm": "^0.19.1-5"
-  }
-}
