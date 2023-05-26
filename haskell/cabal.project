@@ -1,4 +1,4 @@
-packages: .
+packages: . CC-delcont-0.2.1.0 IOSpec-0.3.1.1
 
 source-repository-package
     type: git
