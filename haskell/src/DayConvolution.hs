@@ -3,8 +3,6 @@
 {-# LANGUAGE StandaloneDeriving        #-}
 module DayConvolution where
 
-import           Control.Applicative (liftA2)
-
 data Day f g a = forall x y. Day (f x) (g y) (x -> y -> a)
 
 deriving instance Functor (Day f g)

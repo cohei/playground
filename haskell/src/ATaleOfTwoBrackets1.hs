@@ -10,13 +10,12 @@
 module ATaleOfTwoBrackets1 where
 
 import Control.Exception (Exception, onException, finally, throwIO, try, catch)
+import Control.Monad (replicateM)
 import Control.Monad.Except
   ( ExceptT (ExceptT),
-    MonadIO,
-    MonadTrans (lift),
-    replicateM,
     runExceptT,
   )
+import Control.Monad.IO.Class (MonadIO)
 import Control.Monad.Reader (ReaderT (ReaderT, runReaderT))
 import Control.Monad.State.Strict
   ( MonadState (get, put),
@@ -25,6 +24,7 @@ import Control.Monad.State.Strict
     execStateT,
     modify,
   )
+import Control.Monad.Trans.Class (MonadTrans (lift))
 import Control.Monad.Writer (WriterT (WriterT, runWriterT))
 import Data.Bifunctor (first)
 import Data.Typeable (Typeable)

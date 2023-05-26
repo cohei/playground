@@ -11,7 +11,6 @@
 
 module LaxMonoidalFunctor where
 
-import Control.Applicative (liftA2)
 import Control.Lens (Iso', iso)
 import Data.Bifunctor (Bifunctor)
 import Data.Bifunctor.Assoc (Assoc)

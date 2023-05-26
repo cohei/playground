@@ -10,7 +10,6 @@ module NumberPlate
   , difficult
   ) where
 
-import           Control.Applicative (liftA2)
 import           Control.Monad       (join)
 import           Data.Function       (on)
 import           Data.List           (foldl', partition, sortOn, unfoldr, (\\))

@@ -52,7 +52,7 @@ type Heap         = Loc -> Maybe Data
 newtype ThreadId  = ThreadId Int deriving (Eq, Show)
 
 instance Arbitrary ThreadId where
-  arbitrary                = liftM ThreadId arbitrary
+  arbitrary                = ThreadId <$> arbitrary
 
 instance CoArbitrary ThreadId where
   coarbitrary (ThreadId k) = coarbitrary k
@@ -61,7 +61,7 @@ newtype Scheduler =
   Scheduler (Int -> (Int, Scheduler))
 
 instance Arbitrary Scheduler where
-  arbitrary   = liftM streamSched arbitrary
+  arbitrary   = streamSched <$> arbitrary
 
 instance Show Scheduler where
   show _ = "Test.IOSpec.Scheduler"

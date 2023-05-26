@@ -4,7 +4,6 @@
 -- | [Seemingly impossible functional programs](http://math.andrej.com/2007/09/28/seemingly-impossible-functional-programs/)
 module SeeminglyImpossible where
 
-import Control.Applicative (liftA2)
 import Data.Function (on)
 import Numeric.Natural (Natural)
 import qualified Data.MemoCombinators as Memo (integral)

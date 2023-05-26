@@ -9,8 +9,9 @@
 module ATaleOfTwoBrackets2 where
 
 import Control.Exception qualified
+import Control.Monad (when)
 import Control.Monad.Base (MonadBase (liftBase))
-import Control.Monad.Except (runExceptT, when)
+import Control.Monad.Except (runExceptT)
 import Control.Monad.Reader (ReaderT (runReaderT))
 import Control.Monad.State (StateT (runStateT))
 import Control.Monad.Trans.Control (MonadBaseControl (StM, liftBaseWith, restoreM), control)

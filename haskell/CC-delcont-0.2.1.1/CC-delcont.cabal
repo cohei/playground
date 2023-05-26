@@ -1,5 +1,5 @@
 Name:                   CC-delcont
-Version:                0.2.1.0
+Version:                0.2.1.1
 Description:            An implementation of multi-prompt delimited continuations based
                         on the paper, /A Monadic Framework for Delimited Continuations/,
                         by R. Kent Dybvig, Simon Peyton Jones and Amr Sabry

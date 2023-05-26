@@ -43,6 +43,7 @@ module Control.Monad.CC (
     ) where
 
 import Control.Applicative
+import Control.Monad (ap)
 
 import Control.Monad.Identity
 import Control.Monad.State
