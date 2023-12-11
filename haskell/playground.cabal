@@ -86,6 +86,7 @@ library
       Size
       StateTransition
       Tightrope
+      VectorApplicative
       Wa.Monoid
       Wa.Reader
       WIP.SevenQueens
