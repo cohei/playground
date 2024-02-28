@@ -51,6 +51,7 @@ library
       AutomatonCategory
       Bifold
       Categories
+      CircularProgramming
       Corecursion
       Coroutine
       DataAsFunction
@@ -162,7 +163,8 @@ test-suite doctest
   hs-source-dirs: test/doctest
   main-is: Main.hs
   build-depends:
-      doctest
+      binary-tree
+    , doctest
   build-tool-depends:
     doctest-driver-gen:doctest-driver-gen
   ghc-options:
