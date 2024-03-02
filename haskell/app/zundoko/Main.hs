@@ -4,9 +4,10 @@ import Control.Concurrent (threadDelay)
 import Control.Monad (replicateM, (<=<))
 import Control.Monad.Random (MonadRandom (getRandoms), Random (random, randomR))
 import Data.Bifunctor (first)
+import Data.Foldable (find)
 import Data.Function (on)
 import Data.List (inits, intersperse, isSuffixOf)
-import Data.Maybe (listToMaybe)
+import Data.Maybe (fromJust, listToMaybe)
 import System.Environment (getArgs)
 import System.IO (BufferMode (NoBuffering), hSetBuffering, stdout)
 
@@ -44,7 +45,7 @@ zunDokos :: (MonadRandom m) => m [ZunDoko]
 zunDokos = takeUntil [Zun, Zun, Zun, Zun, Doko] <$> getRandoms
 
 takeUntil :: (Eq a) => [a] -> [a] -> [a]
-takeUntil p = head . filter (isSuffixOf p) . inits
+takeUntil p = fromJust . find (isSuffixOf p) . inits
 
 -- expected length is about 32? want to prove
 averageZunDokoLength :: (MonadRandom m) => Int -> m Double
