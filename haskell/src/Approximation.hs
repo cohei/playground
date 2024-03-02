@@ -4,8 +4,10 @@ module Approximation
   , simpson
   ) where
 
-import           Data.List  (find, tails)
-import           Data.Maybe (fromJust)
+import Data.Foldable (find)
+import Data.List.NonEmpty (NonEmpty ((:|)), prependList, toList)
+import Data.List.NonEmpty qualified as NE (iterate, last, tail)
+import Data.Maybe (fromJust)
 
 -- | Bisection Method
 bisection :: (Ord a, Fractional a, Ord b, Num b) => (a -> b) -> a -> a -> Maybe a
@@ -24,29 +26,39 @@ differentSign x y = x > 0 && y < 0 || x < 0 && y > 0
 
 -- | Newton Method
 newton :: (Eq a, Fractional a) => (a -> a) -> (a -> a) -> a -> a
-newton f f' = converge (==) . iterate next
+newton f f' = converge (==) . NE.iterate next
   where
     next x = x - f x / f' x
 
-converge :: (a -> a -> Bool) -> [a] -> a
-converge p = head . fromJust . find isConverge . tails
+converge :: (a -> a -> Bool) -> NonEmpty a -> a
+converge p = fst . fromJust . find (uncurry p) . pairs
   where
-    isConverge []          = False
-    isConverge [_]         = False
-    isConverge (x : y : _) = p x y
+    pairs :: NonEmpty a -> [(a, a)]
+    pairs = pairsWith (,)
 
 -- | Simpson Method
 simpson :: (Ord a, Floating a) => (a -> a) -> a -> a -> a
-simpson f a b = converge (\x y -> x - y < 10 ** (-10)) $ map (simpSum f) $ iterate addMiddle [a, b]
+simpson f a b = converge (\x y -> x - y < 10 ** (-10)) $ fmap (simpSum f) $ NE.iterate addMiddle $ ne a b
 
-addMiddle :: Fractional a => [a] -> [a]
-addMiddle xs = (zip xs (tail xs) >>= \(a, b) -> [a, middle a b]) ++ [last xs]
+addMiddle :: Fractional a => NonEmpty a -> NonEmpty a
+addMiddle xs = concat (pairsWith (\a b -> [a, middle a b]) xs) |: NE.last xs
 
 rule :: Fractional a => (a -> a) -> a -> a -> a
 rule f a b = (b - a) / 6 * (f a + 4 * f (middle a b) + f b)
 
-simpSum :: Fractional a => (a -> a) -> [a] -> a
-simpSum f xs = sum $ zipWith (rule f) xs $ tail xs
+simpSum :: Fractional a => (a -> a) -> NonEmpty a -> a
+simpSum f xs = sum $ pairsWith (rule f) xs
 
 middle :: Fractional a => a -> a -> a
 middle x y = (x + y) / 2
+
+-- * NonEmpty utilities
+
+ne :: a -> a -> NonEmpty a
+ne x y = x :| [y]
+
+(|:) :: [a] -> a -> NonEmpty a
+xs |: x = xs `prependList` pure x
+
+pairsWith :: (a -> a -> b) -> NonEmpty a -> [b]
+pairsWith f xs = zipWith f (toList xs) (NE.tail xs)
