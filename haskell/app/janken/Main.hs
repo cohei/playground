@@ -1,29 +1,30 @@
 {-# LANGUAGE LambdaCase #-}
+
 module Main where
 
-import           Control.Arrow        ((&&&))
-import           Control.Monad.Random (MonadRandom (getRandoms),
-                                       Random (random, randomR))
-import           Data.Bifunctor       (first)
-import           Data.List            (group, sort)
+import Control.Arrow ((&&&))
+import Control.Monad.Random (MonadRandom (getRandoms), Random (random, randomR))
+import Data.Bifunctor (first)
+import Data.List (sort)
+import Data.List.NonEmpty qualified as NE (group, head)
 
 main :: IO ()
 main = do
   print . take 10 =<< jankens
   print . statistics . take 1000 =<< jankens
 
-statistics :: Ord a => [a] -> [(a, Int)]
-statistics = map (head &&& length) . group . sort
+statistics :: (Ord a) => [a] -> [(a, Int)]
+statistics = map (NE.head &&& length) . NE.group . sort
 
 data Hand = G | C | P
-          deriving (Show, Eq)
+  deriving (Show, Eq)
 
 instance Ord Hand where
   compare h1 h2 | h1 == h2 = EQ
-  compare G C   = GT
-  compare C P   = GT
-  compare P G   = GT
-  compare _ _   = LT
+  compare G C = GT
+  compare C P = GT
+  compare P G = GT
+  compare _ _ = LT
 
 instance Random Hand where
   randomR = undefined
@@ -36,7 +37,7 @@ instance Random Hand where
         2 -> P
         _ -> error "only 0 to 2"
 
-player :: MonadRandom m => m [Hand]
+player :: (MonadRandom m) => m [Hand]
 player = getRandoms
 
 jankens :: (MonadRandom m) => m [Ordering]
