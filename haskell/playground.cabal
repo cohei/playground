@@ -1,4 +1,4 @@
-cabal-version: 3.4
+cabal-version: 3.8
 
 name:           playground
 version:        0.1.0.0
@@ -159,7 +159,6 @@ executable zundoko
 
 test-suite doctest
   import: common, warning
-  type: exitcode-stdio-1.0
   hs-source-dirs: test/doctest
   main-is: Main.hs
   build-depends:
@@ -171,7 +170,6 @@ test-suite doctest
 
 test-suite spec
   import: common, warning
-  type: exitcode-stdio-1.0
   hs-source-dirs: test/spec
   main-is: Main.hs
   other-modules:
@@ -196,7 +194,6 @@ test-suite spec
 
 benchmark lazy-pattern
   import: common, warning
-  type: exitcode-stdio-1.0
   hs-source-dirs: benchmark/lazy-pattern
   main-is: Main.hs
   build-depends:
