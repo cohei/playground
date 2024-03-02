@@ -19,8 +19,9 @@ halve xs = (front, rear)
     ((rear, _), front) = fold f ((xs, xs), []) xs
 
     f :: (([a], [b]), [c]) -> c -> (([a], [b]), [c])
-    f ((rear', []), _)         _ = ((rear', []), [])
-    f ((rear', count), front') x = ((tail rear', drop 2 count), x : front')
+    f ((rear'    , []   ), _     ) _ = ((rear', []), [])
+    f ((_ : rear', count), front') x = ((rear', drop 2 count), x : front')
+    f (([]       , _    ), _     ) _ = error "rear より count が速く減って先に空になるのでこうはならない"
 
 diffav :: Fractional a => [a] -> [a]
 diffav []     = []
