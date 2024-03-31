@@ -77,6 +77,7 @@ library
       MapAccumRPascal
       MapAccumWithState
       MonadWithDefault
+      MonoidAsASingleObjectCategory
       MutableStateInHaskell
       NBonacci
       NumberPlate
