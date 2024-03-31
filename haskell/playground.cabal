@@ -88,6 +88,10 @@ library
       SeeminglyImpossible
       Size
       StateTransition
+      StratifiedDesign.Adaptor.Data
+      StratifiedDesign.Adaptor.Presentation
+      StratifiedDesign.Domain
+      StratifiedDesign.Main
       Tightrope
       VectorApplicative
       Wa.Monoid
