@@ -135,8 +135,7 @@ library
 
 executable flattenDirectory
   import: common, warning
-  hs-source-dirs: app/flattenDirectory
-  main-is: Main.hs
+  main-is: app/flattenDirectory/Main.hs
   build-depends:
       filepath
     , path
@@ -144,22 +143,19 @@ executable flattenDirectory
 
 executable helloWorldThread
   import: common, warning
-  hs-source-dirs: app/helloWorldThread
-  main-is: Main.hs
+  main-is: app/helloWorldThread/Main.hs
   build-depends:
       stm
 
 executable janken
   import: common, warning
-  hs-source-dirs: app/janken
-  main-is: Main.hs
+  main-is: app/janken/Main.hs
   build-depends:
       MonadRandom
 
 executable zundoko
   import: common, warning
-  hs-source-dirs: app/zundoko
-  main-is: Main.hs
+  main-is: app/zundoko/Main.hs
   build-depends:
       MonadRandom
 
