@@ -4,49 +4,36 @@
 
 module DistanceFetcher where
 
-import Control.Arrow (Kleisli (Kleisli, runKleisli))
 import Control.Monad (when)
 import Control.Monad.IO.Class (MonadIO (liftIO))
-import Data.Default.Class (Default (def))
-import Data.Maybe (fromMaybe)
 import Numeric.Natural (Natural)
 import System.Random (randomIO)
 
-type WillPut = Bool
+type WillSave = Bool
 
 data Fetcher f k a
   = Fetcher
-  { get :: k -> f (Maybe a),
-    willPut :: WillPut,
-    put :: k -> a -> f ()
+  { -- | whether upper layer can save this fetched value
+    willSave :: WillSave,
+    fetch :: k -> f (Maybe a),
+    save :: k -> a -> f ()
   }
 
-instance (Applicative f) => Default (Fetcher f k a) where
-  def =
-    Fetcher
-      { get = \_ -> pure Nothing,
-        willPut = False,
-        put = \_ _ -> pure ()
-      }
+fetchToFetcher :: (Applicative f) => WillSave -> (k -> f (Maybe a)) -> Fetcher f k a
+fetchToFetcher willSave fetch = Fetcher {willSave, fetch, save = \_ _ -> pure ()}
 
--- fallback に応じて willPut を変えるため f Bool が必要
-type Function f k a = k -> f (WillPut, a)
+-- fallback に応じて willSave を変えるため f Bool が必要
+type Get f k a = k -> f (WillSave, a)
 
-type Fetch f k a = Function f k a -> Function f k a
-
-compose :: forall m k a. (Monad m) => Fetcher m k a -> Fetch m k a
-compose Fetcher {get, willPut, put} fallback =
-  runKleisli $
-    flip fromMaybe <$> fmap2 (willPut,) (Kleisli get) <*> Kleisli (tap <$> fallback <*> cache)
+compose :: forall m k a. (Monad m) => Fetcher m k a -> Get m k a -> Get m k a
+compose Fetcher {fetch, willSave, save} fallback k =
+  maybe (fallback k `tap` save') (pure . (willSave,)) =<< fetch k
   where
-    cache :: k -> (Bool, a) -> m ()
-    cache k (willPut', a) = when willPut' (put k a)
+    save' :: (WillSave, a) -> m ()
+    save' (willSave', a) = when willSave' $ save k a
 
 tap :: (Monad m) => m a -> (a -> m b) -> m a
-tap m k = m >>= k >> m
-
-fmap2 :: (Functor f, Functor g) => (a -> b) -> f (g a) -> f (g b)
-fmap2 = fmap . fmap
+tap m k = m >>= \a -> a <$ k a
 
 --
 -- ドメイン領域
@@ -57,10 +44,10 @@ type Platform = String
 type Duration = Natural
 
 run :: (Cache m, MonadIO m) => (Platform, Platform) -> m Duration
-run = fmap snd . foldr compose hubenyDistancer fetchers
+run = fmap snd . foldr compose hubenyDistanceGet fetchers
 
 {-
-run = fmap snd . appEndo (foldMap (Endo . compose) fetchers) hubenyDistancer
+run = fmap snd . appEndo (foldMap (Endo . compose) fetchers) hubenyDistanceGet
 
 foldr (f :: a -> b -> b) z xs == appEndo (foldMap (Endo . f :: a -> Endo b) xs) z なので
 -}
@@ -74,32 +61,33 @@ fetchers =
   ]
 
 samePlatformFetcher :: (Applicative f) => Fetcher f (Platform, Platform) Duration
-samePlatformFetcher = def {get = pure . samePlatformGet}
+samePlatformFetcher = fetchToFetcher True $ pure . uncurry samePlatformFetch
 
-samePlatformGet :: (Platform, Platform) -> Maybe Duration
-samePlatformGet (p1, p2) = if p1 == p2 then Just 0 else Nothing
+samePlatformFetch :: Platform -> Platform -> Maybe Duration
+samePlatformFetch p1 p2 = if p1 == p2 then Just 0 else Nothing
 
 class (Monad m) => Cache m where
-  cacheGet :: key -> m (Maybe a)
-  cachePut :: key -> a -> m ()
+  cacheFetch :: key -> m (Maybe a)
+  cacheSave :: key -> a -> m ()
 
-redisFetcher :: (Cache f) => Fetcher f a b
-redisFetcher = Fetcher {willPut = True, get = cacheGet, put = cachePut}
+redisFetcher :: (Cache m) => Fetcher m a b
+redisFetcher = cacheFetcher
 
-databaseFetcher :: (Cache f) => Fetcher f a b
-databaseFetcher = Fetcher {willPut = True, get = cacheGet, put = cachePut}
+databaseFetcher :: (Cache m) => Fetcher m a b
+databaseFetcher = cacheFetcher
+
+cacheFetcher :: (Cache m) => Fetcher m a b
+cacheFetcher = Fetcher {willSave = True, fetch = cacheFetch, save = cacheSave}
 
 googleMapsFetcher :: (MonadIO m) => Fetcher m k Duration
-googleMapsFetcher = def {willPut = True, get = liftIO . googleMapsGet}
+googleMapsFetcher = fetchToFetcher True $ liftIO . googleMapsFetch
 
 -- キャッシュ要
-googleMapsGet :: k -> IO (Maybe Duration)
-googleMapsGet _ = do
-  b <- randomIO
-  pure $ if b then Just 10 else Nothing
+googleMapsFetch :: k -> IO (Maybe Duration)
+googleMapsFetch _ = (\b -> if b then Just 10 else Nothing) <$> randomIO
 
-hubenyDistancer :: (Applicative f) => Function f (Platform, Platform) Duration
-hubenyDistancer = pure . (False,) . hubenyCalculator
+hubenyDistanceGet :: (Applicative f) => Get f (Platform, Platform) Duration
+hubenyDistanceGet = pure . (False,) . uncurry hubenyCalculator
 
-hubenyCalculator :: (Platform, Platform) -> Duration
-hubenyCalculator (p1, p2) = fromIntegral $ length p1 + length p2
+hubenyCalculator :: Platform -> Platform -> Duration
+hubenyCalculator p1 p2 = fromIntegral $ length p1 + length p2

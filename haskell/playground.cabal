@@ -103,7 +103,6 @@ library
     , categories
     , comonad
     , containers
-    , data-default-class
     , data-fix
     , data-memocombinators
     , distributive
