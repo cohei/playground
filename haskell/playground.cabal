@@ -61,7 +61,7 @@ library
       DelimitedContinuation
       DependencyInjection
       DesignForTestability
-      DistanceFetcher
+      DurationFetcher
       Failable
       FizzBuzz.FizzBuzz
       FizzBuzz.Nabeatsu
