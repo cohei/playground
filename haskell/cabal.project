@@ -10,3 +10,7 @@ test-options: --color
 
 -- for doctest
 write-ghc-environment-files: always
+
+--for GHC 9.10
+allow-newer: group-theory:containers
+constraints: path-io == 1.8.2
