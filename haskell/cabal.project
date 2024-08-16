@@ -10,7 +10,3 @@ test-options: --color
 
 -- for doctest
 write-ghc-environment-files: always
-
--- for GHC 9.8
-constraints: refined == 0.8.1
-allow-newer: refined:all, these-skinny:base
