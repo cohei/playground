@@ -43,6 +43,7 @@ library
   hs-source-dirs: src
   exposed-modules:
       AccumulatorGenerator
+      Antifibonacci
       Approximation
       AssociatedType
       AstGadt
