@@ -85,6 +85,7 @@ library
       OpenRecursion
       Prism
       Profunctor
+      RandomFibonacci
       Representable
       SeeminglyImpossible
       Size
@@ -116,6 +117,7 @@ library
     , free
     , group-theory
     , lens
+    , list-t
     , membership
     , monad-control
     , mtl
