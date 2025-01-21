@@ -156,6 +156,41 @@ executable janken
   build-depends:
       MonadRandom
 
+-- https://web.archive.org/web/20230223102349/https://xn--i2r.xn--rhqv96g/2022/02/03/readert-is-extensible-effects/
+executable readert-pattern-is-just-extensible-effects-step0
+  import: common, warning
+  main-is: app/readert-pattern-is-just-extensible-effects/Step0.hs
+  build-depends:
+      transformers
+
+executable readert-pattern-is-just-extensible-effects-step1
+  import: common, warning
+  main-is: app/readert-pattern-is-just-extensible-effects/Step1.hs
+  build-depends:
+      extensible
+    , transformers
+
+executable readert-pattern-is-just-extensible-effects-step2
+  import: common, warning
+  main-is: app/readert-pattern-is-just-extensible-effects/Step2.hs
+  build-depends:
+      extensible
+    , transformers
+
+executable readert-pattern-is-just-extensible-effects-step3
+  import: common, warning
+  main-is: app/readert-pattern-is-just-extensible-effects/Step3.hs
+  build-depends:
+      extensible
+    , transformers
+
+executable readert-pattern-is-just-extensible-effects-step4
+  import: common, warning
+  main-is: app/readert-pattern-is-just-extensible-effects/Step4.hs
+  build-depends:
+      extensible
+    , mtl
+
 executable zundoko
   import: common, warning
   main-is: app/zundoko/Main.hs
