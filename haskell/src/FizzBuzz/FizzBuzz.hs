@@ -1,11 +1,12 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
+
 module FizzBuzz.FizzBuzz (fizz, buzz, hoge) where
 
-import           FizzBuzz.Rule (Rule, modRule)
+import FizzBuzz.Rule (Rule, modRule)
 
-newtype FizzBuzz =
-  FizzBuzz String
-  deriving Semigroup
+newtype FizzBuzz
+  = FizzBuzz String
+  deriving (Semigroup)
 
 instance Show FizzBuzz where
   show (FizzBuzz s) = s

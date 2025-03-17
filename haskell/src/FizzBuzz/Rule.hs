@@ -1,20 +1,20 @@
+{-# LANGUAGE DerivingStrategies #-}
+
 module FizzBuzz.Rule (Rule, runRule, rule, modRule) where
 
-import           Control.Monad (guard)
+import Control.Monad (guard)
 
-type Rule a = Int -> Maybe a
+newtype Rule a = Rule (Int -> Maybe a)
+  deriving newtype (Semigroup)
 
-runRule :: Rule a -> [Either Int a]
-runRule r = map (\i -> maybeToRight i $ r i) [1..]
+runRule :: (Show a) => Rule a -> [String]
+runRule (Rule r) = map (\i -> maybe (show i) show (r i)) [1 ..]
 
 rule :: (Int -> Bool) -> a -> Rule a
-rule p x i = x <$ guard (p i)
+rule p x = Rule $ \i -> x <$ guard (p i)
 
 modRule :: Int -> a -> Rule a
-modRule n = rule (`divisible` n)
+modRule n = rule (`isDivisibleBy` n)
 
-maybeToRight :: a -> Maybe b -> Either a b
-maybeToRight x = maybe (Left x) Right
-
-divisible :: Integral a => a -> a -> Bool
-divisible n m = n `mod` m == 0
+isDivisibleBy :: (Integral a) => a -> a -> Bool
+isDivisibleBy n m = n `mod` m == 0
