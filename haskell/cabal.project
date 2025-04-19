@@ -11,5 +11,6 @@ test-options: --color
 -- for doctest
 write-ghc-environment-files: always
 
---for GHC 9.10
+--for GHC 9.12
+allow-newer: extensible:hashable
 allow-newer: group-theory:containers
