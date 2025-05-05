@@ -156,6 +156,13 @@ executable janken
   build-depends:
       MonadRandom
 
+executable karaage
+  import: common, warning
+  main-is: app/karaage/Main.hs
+  build-depends:
+      generic-lens
+    , lens
+
 -- https://web.archive.org/web/20230223102349/https://xn--i2r.xn--rhqv96g/2022/02/03/readert-is-extensible-effects/
 executable readert-pattern-is-just-extensible-effects-step0
   import: common, warning
