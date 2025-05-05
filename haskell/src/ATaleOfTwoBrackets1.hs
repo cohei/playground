@@ -27,10 +27,9 @@ import Control.Monad.State.Strict
 import Control.Monad.Trans.Class (MonadTrans (lift))
 import Control.Monad.Writer (WriterT (WriterT, runWriterT))
 import Data.Bifunctor (first)
-import Data.Typeable (Typeable)
 
 newtype OddException = OddException Int
-  deriving (Show, Typeable)
+  deriving (Show)
 
 instance Exception OddException
 

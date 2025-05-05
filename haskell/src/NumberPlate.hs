@@ -12,7 +12,7 @@ module NumberPlate
 
 import           Control.Monad       (join)
 import           Data.Function       (on)
-import           Data.List           (foldl', partition, sortOn, unfoldr, (\\))
+import           Data.List           (partition, sortOn, unfoldr, (\\))
 
 data Cell =
   Cell
