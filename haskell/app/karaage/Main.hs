@@ -1,10 +1,11 @@
+{-# LANGUAGE OverloadedLabels #-}
 {-# LANGUAGE OverloadedRecordDot #-}
 -- | https://nunulk-blog-to-kill-time.hatenablog.com/entry/5-programming-languages-blew-my-mind
 module Main (main) where
 
 import Control.Lens ((&), filtered, (%~), singular)
 import Control.Monad (zipWithM_)
-import Data.Generics.Product.Fields (field)
+import Data.Generics.Labels ()
 import Data.List (maximumBy, genericTake)
 import Data.Ord (comparing)
 import GHC.Generics (Generic)
@@ -35,7 +36,7 @@ report i bentos = do
   mapM_ print bentos
 
 snitchOne :: Bentos -> Bentos
-snitchOne bentos = bentos & singular (traverse . filtered (== m)) . field @"count" %~ pred'
+snitchOne bentos = bentos & singular (traverse . filtered (== m)) . #count %~ pred'
   where
     m :: Bento
     m = maximumBy (comparing count) bentos
