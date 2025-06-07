@@ -95,6 +95,7 @@ library
       StratifiedDesign.Domain
       StratifiedDesign.Main
       Tightrope
+      TypeLevelTrim
       VectorApplicative
       Wa.Monoid
       Wa.Reader
