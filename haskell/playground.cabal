@@ -85,6 +85,7 @@ library
       OpenRecursion
       Prism
       Profunctor
+      QuickSelect
       RandomFibonacci
       Representable
       SeeminglyImpossible
@@ -127,6 +128,7 @@ library
     , primitive
     , profunctors
     , QuickCheck
+    , quickcheck-instances
     , random
     , recursion-schemes
     , refined
