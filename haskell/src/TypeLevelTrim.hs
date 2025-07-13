@@ -1,3 +1,4 @@
+{-# LANGUAGE DataKinds #-}
 {-# LANGUAGE UndecidableInstances #-}
 {-# LANGUAGE TypeFamilies #-}
 {- |
@@ -7,9 +8,11 @@ module TypeLevelTrim (Trim) where
 
 import GHC.TypeLits (Symbol, ConsSymbol, UnconsSymbol)
 
--- >>> :kind! Trim " hello "
--- Trim " hello " :: Symbol
--- = "hello"
+-- |
+-- >>> :seti -XDataKinds
+-- >>> import Data.Type.Equality ((:~:)(Refl))
+-- >>> Refl :: Trim " hello " :~: "hello"
+-- Refl
 type Trim :: Symbol -> Symbol
 type family Trim s where
   Trim s = TrimLeft (TrimRight s)
