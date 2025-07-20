@@ -14,7 +14,7 @@ mapAccumR =
   process . (runState .) . (forwards .) . traverse . (Backwards .) . (state .) . process
 
 process :: (a -> b -> (c, d)) -> (b -> a -> (d, c))
-process = (.) (swap .) . flip
+process = ((swap .) .) . flip
 -- process f b a = swap $ f a b
 
 {-
