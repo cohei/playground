@@ -87,6 +87,7 @@ library
       Profunctor
       QuickSelect
       RandomFibonacci
+      RealGcdLcm
       Representable
       SeeminglyImpossible
       Size
