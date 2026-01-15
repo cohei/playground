@@ -1,35 +1,34 @@
 cabal-version: 3.14
-
-name:           playground
-version:        0.1.0.0
-description:    Please see the README on GitHub at <https://github.com/cohei/playground/tree/master/haskell#playground>
-homepage:       https://github.com/cohei/playground#readme
-bug-reports:    https://github.com/cohei/playground/issues
-author:         TANIGUCHI Kohei
-maintainer:     a.d.xvii.kal.mai@gmail.com
-copyright:      2018 TANIGUCHI Kohei
-license:        BSD-3-Clause
-license-file:   LICENSE
-build-type:     Simple
+name: playground
+version: 0.1.0.0
+description: Please see the README on GitHub at <https://github.com/cohei/playground/tree/master/haskell#playground>
+homepage: https://github.com/cohei/playground#readme
+bug-reports: https://github.com/cohei/playground/issues
+author: TANIGUCHI Kohei
+maintainer: a.d.xvii.kal.mai@gmail.com
+copyright: 2018 TANIGUCHI Kohei
+license: BSD-3-Clause
+license-file: LICENSE
+build-type: Simple
 extra-source-files:
-    README.md
+  README.md
 
 source-repository head
   type: git
   location: https://github.com/cohei/playground
 
 common common
-  build-depends: base >= 4.7 && < 5
+  build-depends: base >=4.7 && <5
   default-language: GHC2024
 
 common warning
   ghc-options:
+    -- -Wmissing-export-lists
     -Wall
     -Wcompat
     -Widentities
     -Wincomplete-record-updates
     -Wincomplete-uni-patterns
-    -- -Wmissing-export-lists
     -Wmissing-home-modules
     -Wmissing-import-lists
     -Wmissing-local-signatures
@@ -41,182 +40,186 @@ common warning
 library
   import: common, warning
   hs-source-dirs: src
+  -- cabal-gild: discover src
   exposed-modules:
-      AccumulatorGenerator
-      Antifibonacci
-      Approximation
-      AssociatedType
-      AstGadt
-      ATaleOfTwoBrackets1
-      ATaleOfTwoBrackets2
-      AutomatonCategory
-      Bifold
-      Categories
-      CircularProgramming
-      Corecursion
-      Coroutine
-      DataAsFunction
-      DataTypesALaCarte
-      DayConvolution
-      DeleteMin
-      DelimitedContinuation
-      DependencyInjection
-      DesignForTestability
-      DurationFetcher
-      Failable
-      FizzBuzz.FizzBuzz
-      FizzBuzz.Nabeatsu
-      FizzBuzz.Rule
-      FoldToTree
-      Free
-      HexagonalArchitecture
-      HontohaSugoiNewtype
-      IsItWrongToWantScalaToHaveExistentialOperators
-      LaxMonoidalFunctor
-      LensesEmbodyProductsPrismsEmbodySums
-      LevityPolymorphism
-      MapAccumRPascal
-      MapAccumWithState
-      MonadWithDefault
-      MonoidAsASingleObjectCategory
-      MutableStateInHaskell
-      NBonacci
-      NumberPlate
-      OpenRecursion
-      Prism
-      Profunctor
-      QuickSelect
-      RandomFibonacci
-      RealGcdLcm
-      Representable
-      SeeminglyImpossible
-      Size
-      StateTransition
-      StratifiedDesign.Adaptor.Data
-      StratifiedDesign.Adaptor.Presentation
-      StratifiedDesign.Domain
-      StratifiedDesign.Main
-      Tightrope
-      TypeLevelTrim
-      VectorApplicative
-      Wa.Monoid
-      Wa.Reader
-      WIP.SevenQueens
-      Xor
+    ATaleOfTwoBrackets1
+    ATaleOfTwoBrackets2
+    AccumulatorGenerator
+    Antifibonacci
+    Approximation
+    AssociatedType
+    AstGadt
+    AutomatonCategory
+    Bifold
+    Categories
+    CircularProgramming
+    Corecursion
+    Coroutine
+    DataAsFunction
+    DataTypesALaCarte
+    DayConvolution
+    DeleteMin
+    DelimitedContinuation
+    DependencyInjection
+    DesignForTestability
+    DurationFetcher
+    Failable
+    FizzBuzz.FizzBuzz
+    FizzBuzz.Nabeatsu
+    FizzBuzz.Rule
+    FoldToTree
+    Free
+    HexagonalArchitecture
+    HontohaSugoiNewtype
+    IsItWrongToWantScalaToHaveExistentialOperators
+    LaxMonoidalFunctor
+    LensesEmbodyProductsPrismsEmbodySums
+    LevityPolymorphism
+    MapAccumRPascal
+    MapAccumWithState
+    MonadWithDefault
+    MonoidAsASingleObjectCategory
+    MutableStateInHaskell
+    NBonacci
+    NumberPlate
+    OpenRecursion
+    Prism
+    Profunctor
+    QuickSelect
+    RandomFibonacci
+    RealGcdLcm
+    Representable
+    SeeminglyImpossible
+    Size
+    StateTransition
+    StratifiedDesign.Adaptor.Data
+    StratifiedDesign.Adaptor.Presentation
+    StratifiedDesign.Domain
+    StratifiedDesign.Main
+    Tightrope
+    TypeLevelTrim
+    VectorApplicative
+    WIP.SevenQueens
+    Wa.Monoid
+    Wa.Reader
+    Xor
+
   build-depends:
-      CC-delcont
-    , MonadRandom
-    , Stream
-    , adjunctions
-    , array
-    , assoc
-    , categories
-    , comonad
-    , containers
-    , data-fix
-    , data-memocombinators
-    , distributive
-    , filepath
-    , free
-    , group-theory
-    , lens
-    , list-t
-    , membership
-    , monad-control
-    , mtl
-    , path
-    , path-io
-    , primitive
-    , profunctors
-    , QuickCheck
-    , quickcheck-instances
-    , random
-    , recursion-schemes
-    , refined
-    , stm
-    , time
-    , transformers
-    , transformers-base
-    , unix
-    , utility
+    CC-delcont,
+    MonadRandom,
+    QuickCheck,
+    Stream,
+    adjunctions,
+    array,
+    assoc,
+    categories,
+    comonad,
+    containers,
+    data-fix,
+    data-memocombinators,
+    distributive,
+    filepath,
+    free,
+    group-theory,
+    lens,
+    list-t,
+    membership,
+    monad-control,
+    mtl,
+    path,
+    path-io,
+    primitive,
+    profunctors,
+    quickcheck-instances,
+    random,
+    recursion-schemes,
+    refined,
+    stm,
+    time,
+    transformers,
+    transformers-base,
+    unix,
+    utility
 
 executable flattenDirectory
   import: common, warning
   main-is: app/flattenDirectory/Main.hs
   build-depends:
-      filepath
-    , path
-    , path-io
+    filepath,
+    path,
+    path-io
 
 executable helloWorldThread
   import: common, warning
   main-is: app/helloWorldThread/Main.hs
   build-depends:
-      stm
+    stm
 
 executable janken
   import: common, warning
   main-is: app/janken/Main.hs
   build-depends:
-      MonadRandom
+    MonadRandom
 
 executable karaage
   import: common, warning
   main-is: app/karaage/Main.hs
   build-depends:
-      generic-lens
-    , lens
+    generic-lens,
+    lens
 
 -- https://web.archive.org/web/20230223102349/https://xn--i2r.xn--rhqv96g/2022/02/03/readert-is-extensible-effects/
 executable readert-pattern-is-just-extensible-effects-step0
   import: common, warning
   main-is: app/readert-pattern-is-just-extensible-effects/Step0.hs
   build-depends:
-      transformers
+    transformers
 
 executable readert-pattern-is-just-extensible-effects-step1
   import: common, warning
   main-is: app/readert-pattern-is-just-extensible-effects/Step1.hs
   build-depends:
-      extensible
-    , transformers
+    extensible,
+    transformers
 
 executable readert-pattern-is-just-extensible-effects-step2
   import: common, warning
   main-is: app/readert-pattern-is-just-extensible-effects/Step2.hs
   build-depends:
-      extensible
-    , transformers
+    extensible,
+    transformers
 
 executable readert-pattern-is-just-extensible-effects-step3
   import: common, warning
   main-is: app/readert-pattern-is-just-extensible-effects/Step3.hs
   build-depends:
-      extensible
-    , transformers
+    extensible,
+    transformers
 
 executable readert-pattern-is-just-extensible-effects-step4
   import: common, warning
   main-is: app/readert-pattern-is-just-extensible-effects/Step4.hs
   build-depends:
-      extensible
-    , mtl
+    extensible,
+    mtl
 
 executable zundoko
   import: common, warning
   main-is: app/zundoko/Main.hs
   build-depends:
-      MonadRandom
+    MonadRandom
 
 test-suite doctest
   import: common, warning
   hs-source-dirs: test/doctest
   main-is: Main.hs
   build-depends:
-      binary-tree
-    , doctest
+    binary-tree,
+    doctest
+
   build-tool-depends:
     doctest-driver-gen:doctest-driver-gen
+
   ghc-options:
     -Wno-missing-import-lists
 
@@ -225,30 +228,31 @@ test-suite spec
   hs-source-dirs: test/spec
   main-is: Main.hs
   other-modules:
-      ApproximationSpec
-      DeleteMinSpec
-      FizzBuzzSpec
-      FoldToTreeSpec
-      IOSpec
-      IsItWrongToWantScalaToHaveExistentialOperatorsSpec
-      LevityPolymorphismSpec
-      MapAccumWithStateSpec
-      MutableStateInHaskellSpec
-      SizeSpec
-      Wa.MonoidSpec
-      Wa.ReaderSpec
+    ApproximationSpec
+    DeleteMinSpec
+    FizzBuzzSpec
+    FoldToTreeSpec
+    IOSpec
+    IsItWrongToWantScalaToHaveExistentialOperatorsSpec
+    LevityPolymorphismSpec
+    MapAccumWithStateSpec
+    MutableStateInHaskellSpec
+    SizeSpec
+    Wa.MonoidSpec
+    Wa.ReaderSpec
+
   build-depends:
-      hspec
-    , containers
-    , IOSpec
-    , lens
-    , playground
-    , QuickCheck
-    , quickcheck-instances
+    IOSpec,
+    QuickCheck,
+    containers,
+    hspec,
+    lens,
+    playground,
+    quickcheck-instances
 
 benchmark lazy-pattern
   import: common, warning
   hs-source-dirs: benchmark/lazy-pattern
   main-is: Main.hs
   build-depends:
-      criterion
+    criterion
