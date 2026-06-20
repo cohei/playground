@@ -77,6 +77,8 @@ library
     LevityPolymorphism
     MapAccumRPascal
     MapAccumWithState
+    MonadComposition.Distributive
+    MonadComposition.Traversable
     MonadWithDefault
     MonoidAsASingleObjectCategory
     MutableStateInHaskell
