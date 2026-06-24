@@ -3,17 +3,18 @@
 module FizzBuzz.Rule (Rule, runRule, rule, modRule) where
 
 import Control.Monad (guard)
+import Numeric.Natural (Natural)
 
-newtype Rule a = Rule (Int -> Maybe a)
+newtype Rule a = Rule (Natural -> Maybe a)
   deriving newtype (Semigroup)
 
 runRule :: (Show a) => Rule a -> [String]
-runRule (Rule r) = map (\i -> maybe (show i) show (r i)) [1 ..]
+runRule (Rule r) = map (\n -> maybe (show n) show (r n)) [1 ..]
 
-rule :: (Int -> Bool) -> a -> Rule a
-rule p x = Rule $ \i -> x <$ guard (p i)
+rule :: (Natural -> Bool) -> a -> Rule a
+rule p x = Rule $ \n -> x <$ guard (p n)
 
-modRule :: Int -> a -> Rule a
+modRule :: Natural -> a -> Rule a
 modRule n = rule (`isDivisibleBy` n)
 
 isDivisibleBy :: (Integral a) => a -> a -> Bool
