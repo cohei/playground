@@ -2,24 +2,26 @@
 module NumberPlate
   ( -- * solve
     solve
+
     -- * I/O
   , board
   , display
+
     -- * examples
   , easy
   , difficult
   ) where
 
-import           Control.Monad       (join)
-import           Data.Function       (on)
-import           Data.List           (partition, sortOn, unfoldr, (\\))
+import Control.Monad (join)
+import Data.Function (on)
+import Data.List (partition, sortOn, unfoldr, (\\))
 
-data Cell =
-  Cell
+data Cell
+  = Cell
   { number :: Int
-  , row    :: Int
+  , row :: Int
   , column :: Int
-  , block  :: Int
+  , block :: Int
   }
 
 type Board = [Cell]
@@ -37,10 +39,10 @@ loop :: State -> [State]
 loop state@(_, []) = [state]
 loop (filled, target : empties) = nextStates >>= loop
   where
-    nextStates = map (\c -> (target { number = c } : filled, empties)) candidates
-    candidates = foldl' (\ns selector -> ns \\ inSame selector) [1..9] [row, column, block]
+    nextStates = map (\c -> (target {number = c} : filled, empties)) candidates
+    candidates = foldl' (\ns selector -> ns \\ inSame selector) [1 .. 9] [row, column, block]
 
-    inSame :: Eq a => (Cell -> a) -> [Int]
+    inSame :: (Eq a) => (Cell -> a) -> [Int]
     inSame selector = map number (filter (((==) `on` selector) target) filled)
 
 board :: [Int] -> Board
@@ -50,7 +52,7 @@ board = zipWith (\(r, c) n -> Cell n r c (whichBlock r c)) positions
     whichBlock r c = 3 * (r `div` 3) + c `div` 3
 
     positions :: [(Int, Int)]
-    positions = join (liftA2 (,)) [0..8]
+    positions = join (liftA2 (,)) [0 .. 8]
 
 display :: Board -> IO ()
 display = mapM_ (print . map number . sortOn column) . chunkOf 9 . sortOn row
@@ -62,6 +64,7 @@ chunkOf n = unfoldr f
     f [] = Nothing
     f xs = Just $ splitAt n xs
 
+{- FOURMOLU_DISABLE -}
 easy, difficult :: Board
 easy = board
   [5,1,7, 6,0,0, 0,3,4,

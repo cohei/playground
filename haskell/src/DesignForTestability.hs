@@ -1,11 +1,13 @@
 -- | [現在時刻が関わるユニットテストから、テスト容易性設計を学ぶ](https://t-wada.hatenablog.jp/entry/design-for-testability)
 module DesignForTestability where
 
-import           Data.Time.Clock     (UTCTime, getCurrentTime)
-import           Data.Time.LocalTime (LocalTime (localTimeOfDay),
-                                      TimeOfDay (todHour),
-                                      TimeZone (TimeZone, timeZoneMinutes, timeZoneName, timeZoneSummerOnly),
-                                      utcToLocalTime)
+import Data.Time.Clock (UTCTime, getCurrentTime)
+import Data.Time.LocalTime
+  ( LocalTime (localTimeOfDay)
+  , TimeOfDay (todHour)
+  , TimeZone (TimeZone, timeZoneMinutes, timeZoneName, timeZoneSummerOnly)
+  , utcToLocalTime
+  )
 
 -- | 「現在時刻」に応じて、挨拶の内容を下記のようにそれぞれ返す機能
 -- （タイムゾーンは Asia/Tokyo とする）
@@ -20,7 +22,7 @@ localHour :: TimeZone -> UTCTime -> Int
 localHour tz = todHour . localTimeOfDay . utcToLocalTime tz
 
 jst :: TimeZone
-jst = TimeZone { timeZoneMinutes = 9 * 60, timeZoneSummerOnly = False, timeZoneName = "JST" }
+jst = TimeZone {timeZoneMinutes = 9 * 60, timeZoneSummerOnly = False, timeZoneName = "JST"}
 
 -- |
 -- >>> between 0 10 3
@@ -29,26 +31,26 @@ jst = TimeZone { timeZoneMinutes = 9 * 60, timeZoneSummerOnly = False, timeZoneN
 -- False
 -- >>> between 0 10 0
 -- True
-between :: Ord a => a -> a -> a -> Bool
+between :: (Ord a) => a -> a -> a -> Bool
 between l u x = l <= x && x < u
 
 data Language = Ja | En
 
-data Greeting = Greeting { morning :: String, noon :: String, night :: String }
+data Greeting = Greeting {morning :: String, noon :: String, night :: String}
 
 greeting :: Language -> Greeting
 greeting Ja =
   Greeting
-  { morning = "おはようございます"
-  , noon = "こんにちは"
-  , night = "こんばんは"
-  }
+    { morning = "おはようございます"
+    , noon = "こんにちは"
+    , night = "こんばんは"
+    }
 greeting En =
   Greeting
-  { morning = "Good Morning"
-  , noon = "Good Afternoon"
-  , night = "Good Evening"
-  }
+    { morning = "Good Morning"
+    , noon = "Good Afternoon"
+    , night = "Good Evening"
+    }
 
 -- |
 -- 「現在時刻」と「ロケール」に応じて、挨拶の内容を下記のようにそれぞれ返す機能を作成したい。
@@ -80,9 +82,9 @@ printGreetingI18n l = greetI18n l . localHour jst <$> getCurrentTime
 -- Good Evening
 greetI18n :: Language -> Int -> String
 greetI18n l h
-  | between  5 12 h                  = morning g
-  | between 12 18 h                  = noon g
+  | between 5 12 h = morning g
+  | between 12 18 h = noon g
   | between 18 24 h || between 0 5 h = night g
-  | otherwise                        = undefined
+  | otherwise = undefined
   where
     g = greeting l

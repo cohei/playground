@@ -1,8 +1,8 @@
 module Wa.MonoidSpec (spec) where
 
-import           Test.Hspec (Spec, it, shouldBe)
+import Test.Hspec (Spec, it, shouldBe)
 
-import           Wa.Reader  (の, と, 和, 積)
+import Wa.Reader (と, の, 和, 積)
 
 spec :: Spec
 spec = do

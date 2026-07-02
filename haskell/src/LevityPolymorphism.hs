@@ -1,11 +1,12 @@
-{-# LANGUAGE DataKinds      #-}
+{-# LANGUAGE DataKinds #-}
 {-# LANGUAGE ExplicitForAll #-}
-{-# LANGUAGE MagicHash      #-}
-{-# LANGUAGE PolyKinds      #-}
+{-# LANGUAGE MagicHash #-}
+{-# LANGUAGE PolyKinds #-}
+
 -- | <https://qiita.com/ruicc/items/e2879c44eba77b1e7170 Levity polymorphismについて軽く>
 module LevityPolymorphism where
 
-import           GHC.Exts (Int (I#), Int#, TYPE, (+#))
+import GHC.Exts (Int (I#), Int#, TYPE, (+#))
 
 class ToString (a :: TYPE r) where
   toString :: a -> String
@@ -36,7 +37,7 @@ twice :: forall (a :: TYPE r). Add a => a -> a
 twice x = add x x
 -}
 
-class Add a => Twice (a :: TYPE r) where
+class (Add a) => Twice (a :: TYPE r) where
   twice :: a -> a
 
 instance Twice Int where

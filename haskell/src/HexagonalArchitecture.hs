@@ -14,10 +14,10 @@ import Data.Functor.Identity (Identity (Identity))
 newtype Currency = Currency Double
   deriving (Num, Ord, Eq)
 
-class Applicative f => DiscountRateRepository f where
+class (Applicative f) => DiscountRateRepository f where
   discountRate :: Currency -> f Double
 
-type Discounter = forall f. DiscountRateRepository f => Currency -> f Currency
+type Discounter = forall f. (DiscountRateRepository f) => Currency -> f Currency
 
 discount :: Discounter
 discount amount = multiply amount <$> discountRate amount
@@ -33,9 +33,9 @@ instance DiscountRateRepository MockDiscountRateRepository where
   discountRate amount =
     pure $
       if
-        | amount <=  100 -> 0.01
+        | amount <= 100 -> 0.01
         | amount <= 1000 -> 0.02
-        | otherwise      -> 0.05
+        | otherwise -> 0.05
 
 test :: Discounter -> MockDiscountRateRepository Bool
 test discounter = do

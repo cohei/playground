@@ -2,13 +2,14 @@
 {-# LANGUAGE DerivingVia #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE TypeApplications #-}
+
 module NBonacci (nBonacci) where
 
-import Control.Applicative (ZipList(ZipList))
+import Control.Applicative (ZipList (ZipList))
 import Data.Coerce (coerce)
 import Data.Function (fix)
 import Data.List (tails)
-import Data.Monoid (Ap(Ap), Sum(Sum))
+import Data.Monoid (Ap (Ap), Sum (Sum))
 
 newtype SumZipList a = SumZipList (ZipList a)
   deriving newtype (Functor, Applicative)

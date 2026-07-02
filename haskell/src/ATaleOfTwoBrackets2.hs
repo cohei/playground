@@ -36,16 +36,16 @@ main =
   mconcat $
     intersperse
       newline
-      [ checkControl,
-        runReaderT checkControl (),
-        runExceptT checkControl >>= print @(Either () ()),
-        runStateT checkControl () >>= print,
-        runBad checkControl
+      [ checkControl
+      , runReaderT checkControl ()
+      , runExceptT checkControl >>= print @(Either () ())
+      , runStateT checkControl () >>= print
+      , runBad checkControl
       ]
   where
     newline = putStrLn ""
 
-checkControl :: MonadBaseControl IO m => m ()
+checkControl :: (MonadBaseControl IO m) => m ()
 checkControl = control \runInBase -> do
   ensureIs <- makeHook
 
@@ -62,12 +62,13 @@ checkControl = control \runInBase -> do
 makeHook :: IO (Int -> IO ())
 makeHook = do
   ref <- newIORef (0 :: Int)
-  let ensureIs :: Int -> IO ()
-      ensureIs expected = do
-        putStrLn $ "ensureIs " ++ show expected
-        curr <- atomicModifyIORef ref \curr -> (succ curr, curr)
-        when (curr /= expected) do
-          putStrLn $ "sanityCheckBalances checkControl (curr, expected): " <> show (curr, expected)
-          exitImmediately (ExitFailure 43)
+  let
+    ensureIs :: Int -> IO ()
+    ensureIs expected = do
+      putStrLn $ "ensureIs " ++ show expected
+      curr <- atomicModifyIORef ref \curr -> (succ curr, curr)
+      when (curr /= expected) do
+        putStrLn $ "sanityCheckBalances checkControl (curr, expected): " <> show (curr, expected)
+        exitImmediately (ExitFailure 43)
 
   pure ensureIs

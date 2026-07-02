@@ -1,25 +1,27 @@
 {-# LANGUAGE OverloadedLabels #-}
 {-# LANGUAGE OverloadedRecordDot #-}
+
 -- | https://nunulk-blog-to-kill-time.hatenablog.com/entry/5-programming-languages-blew-my-mind
 module Main (main) where
 
-import Control.Lens ((&), filtered, (%~), singular)
+import Control.Lens (filtered, singular, (%~), (&))
 import Control.Monad (zipWithM_)
 import Data.Generics.Labels ()
-import Data.List (maximumBy, genericTake)
+import Data.List (genericTake, maximumBy)
 import Data.Ord (comparing)
 import GHC.Generics (Generic)
 import Numeric.Natural (Natural)
 
 main :: IO ()
 main = do
-  let bentos =
-        [ Bento {name = "唐揚げ", count = 10},
-          Bento {name = "唐揚げ", count = 8},
-          Bento {name = "唐揚げ", count = 6}
-        ]
-      tryCount :: Natural
-      tryCount = 5
+  let
+    bentos =
+      [ Bento {name = "唐揚げ", count = 10}
+      , Bento {name = "唐揚げ", count = 8}
+      , Bento {name = "唐揚げ", count = 6}
+      ]
+    tryCount :: Natural
+    tryCount = 5
   zipWithM_ report [1 ..] $ genericTake tryCount $ iterate snitchOne bentos
 
 data Bento = Bento {name :: String, count :: Natural}

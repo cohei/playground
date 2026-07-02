@@ -9,20 +9,17 @@
 -- | [A Tale of Two Brackets](https://www.fpcomplete.com/blog/2017/06/tale-of-two-brackets/)
 module ATaleOfTwoBrackets1 where
 
-import Control.Exception (Exception, onException, finally, throwIO, try, catch)
+import Control.Exception (Exception, catch, finally, onException, throwIO, try)
 import Control.Monad (replicateM)
-import Control.Monad.Except
-  ( ExceptT (ExceptT),
-    runExceptT,
-  )
+import Control.Monad.Except (ExceptT (ExceptT), runExceptT)
 import Control.Monad.IO.Class (MonadIO)
 import Control.Monad.Reader (ReaderT (ReaderT, runReaderT))
 import Control.Monad.State.Strict
-  ( MonadState (get, put),
-    StateT (StateT, runStateT),
-    evalStateT,
-    execStateT,
-    modify,
+  ( MonadState (get, put)
+  , StateT (StateT, runStateT)
+  , evalStateT
+  , execStateT
+  , modify
   )
 import Control.Monad.Trans.Class (MonadTrans (lift))
 import Control.Monad.Writer (WriterT (WriterT, runWriterT))
@@ -46,22 +43,22 @@ main :: IO ()
 -- main = runStateT (replicateM 2 mayThrow) 0 >>= print
 main = runStateT (replicateM 2 (tryStateT @OddException mayThrow)) 0 >>= print
 
-tryStateT :: Exception e => StateT s IO a -> StateT s IO (Either e a)
+tryStateT :: (Exception e) => StateT s IO a -> StateT s IO (Either e a)
 tryStateT action =
   StateT \s -> either ((,s) . Left) (first Right) <$> try (runStateT action s)
 
-try' :: Exception e => IO a -> IO (Either e a)
+try' :: (Exception e) => IO a -> IO (Either e a)
 try' action = (pure <$> action) `catch` (pure . Left)
 
-catch' :: Exception e => IO a -> (e -> IO a) -> IO a
+catch' :: (Exception e) => IO a -> (e -> IO a) -> IO a
 catch' action handler = either handler pure =<< try action
 
 -- with tryStateT
-catchStateT :: Exception e => StateT s IO a -> (e -> StateT s IO a) -> StateT s IO a
+catchStateT :: (Exception e) => StateT s IO a -> (e -> StateT s IO a) -> StateT s IO a
 catchStateT action handler = either handler pure =<< tryStateT action
 
 -- with catch
-catchStateT2 :: Exception e => StateT s IO a -> (e -> IO a) -> StateT s IO a
+catchStateT2 :: (Exception e) => StateT s IO a -> (e -> IO a) -> StateT s IO a
 catchStateT2 action handler =
   StateT \s0 ->
     runStateT action s0 `catch` \e -> do
@@ -69,7 +66,7 @@ catchStateT2 action handler =
       pure (a, s0)
 
 -- with catch, same signature as catchStateT
-catchStateT3 :: Exception e => StateT s IO a -> (e -> StateT s IO a) -> StateT s IO a
+catchStateT3 :: (Exception e) => StateT s IO a -> (e -> StateT s IO a) -> StateT s IO a
 catchStateT3 action handler =
   StateT \s0 -> runStateT action s0 `catch` \e -> runStateT (handler e) s0
 
@@ -102,7 +99,7 @@ main2 :: IO ()
 -- 3
 main2 = execStateT (actionStateT `finallyStateT3` cleanupStateT) 0 >>= print
 
-finallyWriterT :: Monoid w => WriterT w IO a -> WriterT w IO b -> WriterT w IO a
+finallyWriterT :: (Monoid w) => WriterT w IO a -> WriterT w IO b -> WriterT w IO a
 finallyWriterT action cleanup =
   WriterT do
     (a, w1) <- runWriterT action `onException` runWriterT cleanup
@@ -126,9 +123,11 @@ type RunInStateTIO s = forall x. StateT s IO x -> IO (x, s)
 
 capture :: forall s a. (RunInStateTIO s -> IO a) -> StateT s IO a
 capture f = StateT \s0 ->
-  let runInIO :: RunInStateTIO s
-      runInIO m = runStateT m s0
-   in (,s0) <$> f runInIO
+  let
+    runInIO :: RunInStateTIO s
+    runInIO m = runStateT m s0
+  in
+    (,s0) <$> f runInIO
 
 restoreState :: (a, s) -> StateT s IO a
 restoreState = StateT . const . pure
@@ -159,7 +158,7 @@ main3 = do
 
 type RunInIO m = forall x. m x -> IO (StM m x)
 
-class MonadIO m => MonadIOControl m where
+class (MonadIO m) => MonadIOControl m where
   type StM m a
   liftIOWith :: (RunInIO m -> IO a) -> m a
   restoreM :: StM m a -> m a
@@ -169,13 +168,15 @@ instance MonadIOControl IO where
   liftIOWith f = f id
   restoreM = pure
 
-instance MonadIOControl m => MonadIOControl (StateT s m) where
+instance (MonadIOControl m) => MonadIOControl (StateT s m) where
   type StM (StateT s m) a = StM m (a, s)
   liftIOWith f = StateT \s0 ->
     (,s0) <$> liftIOWith \run ->
-      let runInIO :: RunInIO (StateT s m)
-          runInIO m = run $ runStateT m s0
-       in f runInIO
+      let
+        runInIO :: RunInIO (StateT s m)
+        runInIO m = run $ runStateT m s0
+      in
+        f runInIO
   restoreM = StateT . const . restoreM
 
 finallyStateT3'' :: StateT s IO a -> StateT s IO b -> StateT s IO a
@@ -190,29 +191,35 @@ instance (MonadIOControl m, Monoid w) => MonadIOControl (WriterT w m) where
   liftIOWith f =
     WriterT $
       (,mempty) <$> liftIOWith \run ->
-        let runInIO :: RunInIO (WriterT w m)
-            runInIO = run . runWriterT
-         in f runInIO
+        let
+          runInIO :: RunInIO (WriterT w m)
+          runInIO = run . runWriterT
+        in
+          f runInIO
   restoreM = WriterT . restoreM
 
-instance MonadIOControl m => MonadIOControl (ReaderT r m) where
+instance (MonadIOControl m) => MonadIOControl (ReaderT r m) where
   type StM (ReaderT r m) a = StM m a
   liftIOWith f = ReaderT \r ->
     liftIOWith \run ->
-      let runInIO :: RunInIO (ReaderT r m)
-          runInIO m = run $ runReaderT m r
-       in f runInIO
+      let
+        runInIO :: RunInIO (ReaderT r m)
+        runInIO m = run $ runReaderT m r
+      in
+        f runInIO
   restoreM = ReaderT . const . restoreM
 
-instance MonadIOControl m => MonadIOControl (ExceptT e m) where
+instance (MonadIOControl m) => MonadIOControl (ExceptT e m) where
   type StM (ExceptT e m) a = StM m (Either e a)
   liftIOWith f =
     ExceptT $
       Right <$> liftIOWith \run ->
-        let runInIO :: RunInIO (ExceptT e m)
-            runInIO = run . runExceptT
-         in f runInIO
+        let
+          runInIO :: RunInIO (ExceptT e m)
+          runInIO = run . runExceptT
+        in
+          f runInIO
   restoreM = ExceptT . restoreM
 
-control :: MonadIOControl m => (RunInIO m -> IO (StM m a)) -> m a
+control :: (MonadIOControl m) => (RunInIO m -> IO (StM m a)) -> m a
 control f = liftIOWith f >>= restoreM

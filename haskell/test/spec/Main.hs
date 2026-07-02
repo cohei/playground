@@ -1,20 +1,19 @@
 module Main (main) where
 
-import           Test.Hspec                                         (describe,
-                                                                     hspec)
+import Test.Hspec (describe, hspec)
 
-import qualified ApproximationSpec                                  (spec)
-import qualified DeleteMinSpec                                      (spec)
-import qualified FizzBuzzSpec                                       (spec)
-import qualified FoldToTreeSpec                                     (spec)
-import qualified IOSpec                                             (spec)
-import qualified IsItWrongToWantScalaToHaveExistentialOperatorsSpec (spec)
-import qualified LevityPolymorphismSpec                             (spec)
-import qualified MapAccumWithStateSpec                              (spec)
-import qualified MutableStateInHaskellSpec                          (spec)
-import qualified SizeSpec                                           (spec)
-import qualified Wa.MonoidSpec                                      (spec)
-import qualified Wa.ReaderSpec                                      (spec)
+import ApproximationSpec qualified (spec)
+import DeleteMinSpec qualified (spec)
+import FizzBuzzSpec qualified (spec)
+import FoldToTreeSpec qualified (spec)
+import IOSpec qualified (spec)
+import IsItWrongToWantScalaToHaveExistentialOperatorsSpec qualified (spec)
+import LevityPolymorphismSpec qualified (spec)
+import MapAccumWithStateSpec qualified (spec)
+import MutableStateInHaskellSpec qualified (spec)
+import SizeSpec qualified (spec)
+import Wa.MonoidSpec qualified (spec)
+import Wa.ReaderSpec qualified (spec)
 
 main :: IO ()
 main = hspec $ do

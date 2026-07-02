@@ -1,5 +1,6 @@
-{-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE NamedFieldPuns #-}
+
 -- | [実戦での Scala: Cake パターンを用いた Dependency Injection (DI)](http://eed3si9n.com/ja/real-world-scala-dependency-injection-di/)
 module DependencyInjection where
 
@@ -21,12 +22,12 @@ data PotSensor = PotSensor
 instance SensorDevice PotSensor where
   isCoffeePresent = const True
 
-data Warmer p h = Warmer { potSensor :: p, heater :: h }
+data Warmer p h = Warmer {potSensor :: p, heater :: h}
 
 triggerWarmer :: (OnOffDevice h m, SensorDevice p) => Warmer p h -> m ()
-triggerWarmer Warmer{potSensor, heater}
+triggerWarmer Warmer {potSensor, heater}
   | isCoffeePresent potSensor = on heater
-  | otherwise                 = off heater
+  | otherwise = off heater
 
 warmer :: Warmer PotSensor Heater
 warmer = Warmer PotSensor Heater

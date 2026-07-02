@@ -1,15 +1,17 @@
 {-# LANGUAGE NoImplicitPrelude #-}
+
 module DataAsFunction
-  (
-  -- * Tuple
+  ( -- * Tuple
     pair
   , fst
   , snd
-  -- * Maybe
+
+    -- * Maybe
   , nothing
   , just
   , maybe
-  -- * Either
+
+    -- * Either
   , left
   , right
   , either
@@ -34,7 +36,7 @@ maybe :: b -> (a -> b) -> (b -> (a -> b) -> c) -> c
 maybe n j m = m n j
 
 left :: a -> (a -> c) -> (b -> c) -> c
-left  x l _r = l x
+left x l _r = l x
 
 right :: b -> (a -> c) -> (b -> c) -> c
 right x _l r = r x

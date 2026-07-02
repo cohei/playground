@@ -1,4 +1,5 @@
 {-# LANGUAGE ConstraintKinds #-}
+
 module Corecursion where
 
 import GHC.Stack (HasCallStack)
@@ -37,7 +38,7 @@ labelMaybe (Tree _ x _) = Just x
 
 type Partial = HasCallStack
 
-labelPartial :: Partial => Tree a -> a
+labelPartial :: (Partial) => Tree a -> a
 labelPartial Leaf = error "labelPartial: Leaf"
 labelPartial (Tree _ x _) = x
 

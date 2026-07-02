@@ -1,15 +1,20 @@
 module IsItWrongToWantScalaToHaveExistentialOperatorsSpec (spec) where
 
-import           Control.Lens                                   (Traversal',
-                                                                 (&), (.~),
-                                                                 (^?), _Just)
-import           Test.Hspec                                     (Spec, describe,
-                                                                 it, shouldBe)
+import Control.Lens (Traversal', (&), (.~), (^?), _Just)
+import Test.Hspec (Spec, describe, it, shouldBe)
 
-import           IsItWrongToWantScalaToHaveExistentialOperators (A (A), B (B),
-                                                                 C (C), D (D),
-                                                                 E (E), a, b, c,
-                                                                 d, e)
+import IsItWrongToWantScalaToHaveExistentialOperators
+  ( A (A)
+  , B (B)
+  , C (C)
+  , D (D)
+  , E (E)
+  , a
+  , b
+  , c
+  , d
+  , e
+  )
 
 spec :: Spec
 spec = do

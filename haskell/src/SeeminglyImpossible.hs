@@ -5,8 +5,8 @@
 module SeeminglyImpossible where
 
 import Data.Function (on)
+import Data.MemoCombinators qualified as Memo (integral)
 import Numeric.Natural (Natural)
-import qualified Data.MemoCombinators as Memo (integral)
 
 type Cantor = Natural -> Bool
 
@@ -15,7 +15,6 @@ b # c = \n -> if n == 0 then b else c (n - 1)
 
 anyCantor, allCantor :: (Cantor -> Bool) -> Bool
 find :: (Cantor -> Bool) -> Cantor
-
 find = find7
 anyCantor p = p (find p)
 allCantor = not . anyCantor . (not .)
@@ -23,12 +22,12 @@ allCantor = not . anyCantor . (not .)
 find1 :: (Cantor -> Bool) -> Cantor
 find1 p
   | anyCantor (p . (False #)) = False # find1 (p . (False #))
-  | otherwise                 = True  # find1 (p . (True  #))
+  | otherwise = True # find1 (p . (True #))
 
 search :: (Cantor -> Bool) -> Maybe Cantor
 search p = if anyCantor p then Just (find p) else Nothing
 
-instance Eq a => Eq (Cantor -> a) where
+instance (Eq a) => Eq (Cantor -> a) where
   f1 == f2 = allCantor $ liftA2 (==) f1 f2
 
 b2n :: Bool -> Natural
@@ -36,20 +35,17 @@ b2n False = 0
 b2n True = 1
 
 f, g, h :: Cantor -> Natural
-
-f c = c' (7 * c' 4 +  4 * c' 7 + 4)
+f c = c' (7 * c' 4 + 4 * c' 7 + 4)
   where
     c' = b2n . c
-
-g c = c' (c' 4 + 11 *  c' 7)
+g c = c' (c' 4 + 11 * c' 7)
   where
     c' = b2n . c
-
 h c = c' $ case (c 4, c 7) of
   (False, False) -> 4
-  (False, True)  -> 8
-  (True,  False) -> 11
-  (True,  True)  -> 15
+  (False, True) -> 8
+  (True, False) -> 11
+  (True, True) -> 15
   where
     c' = b2n . c
 
@@ -62,7 +58,7 @@ p --> q = not p || q
 eq :: Natural -> Cantor -> Cantor -> Bool
 eq n c1 c2 = all (\n' -> c1 n' == c2 n') [0 .. (if n == 0 then 0 else pred n)]
 
-modulus :: Eq a => (Cantor -> a) -> Natural
+modulus :: (Eq a) => (Cantor -> a) -> Natural
 modulus c = least $ \n -> allCantor $ \c1 -> allCantor $ \c2 -> eq n c1 c2 --> (c c1 == c c2)
 
 projection :: Natural -> Cantor -> Natural
@@ -71,7 +67,7 @@ projection n c = b2n (c n)
 find2 :: (Cantor -> Bool) -> Cantor
 find2 p
   | p (False # find2 (p . (False #))) = False # find2 (p . (False #))
-  | otherwise                         = True  # find2 (p . (True  #))
+  | otherwise = True # find2 (p . (True #))
 
 find3 :: (Cantor -> Bool) -> Cantor
 find3 p = b # find3 (p . (b #))
@@ -80,8 +76,8 @@ find3 p = b # find3 (p . (b #))
 
 find4 :: (Cantor -> Bool) -> Cantor
 find4 p
-  | p c       = c
-  | otherwise = True # find4 (p . (True  #))
+  | p c = c
+  | otherwise = True # find4 (p . (True #))
   where
     c = False # find4 (p . (False #))
 
@@ -130,28 +126,25 @@ find7 p = cantor
         EQ -> False
         GT -> c $ m - n - 1
 
-f',g',h' :: Cantor -> Natural
-
+f', g', h' :: Cantor -> Natural
 f' c = c' $ 10 * c' (3 ^ (80 :: Int)) + 100 * c' (4 ^ (80 :: Int)) + 1000 * c' (5 ^ (80 :: Int))
   where
     c' = b2n . c
-
 g' c = c' $ 10 * c' (3 ^ (80 :: Int)) + 100 * c' (4 ^ (80 :: Int)) + 1000 * c' (6 ^ (80 :: Int))
   where
     c' = b2n . c
-
 h' c = c' k
   where
     c' = b2n . c
 
     i, j, k :: Natural
-    i = if c (5 ^ (80 :: Int)) then 1000    else 0
-    j = if c (3 ^ (80 :: Int)) then 10 + i  else i
+    i = if c (5 ^ (80 :: Int)) then 1000 else 0
+    j = if c (3 ^ (80 :: Int)) then 10 + i else i
     k = if c (4 ^ (80 :: Int)) then 100 + j else j
 
 pointwiseAnd :: [Natural] -> (Cantor -> Bool)
-pointwiseAnd []    _ = True
-pointwiseAnd (n:a) b = b n && pointwiseAnd a b
+pointwiseAnd [] _ = True
+pointwiseAnd (n : a) b = b n && pointwiseAnd a b
 
 sameElements :: [Natural] -> [Natural] -> Bool
 sameElements = (==) `on` pointwiseAnd

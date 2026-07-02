@@ -32,7 +32,8 @@ send e = do
 interpret :: (forall x. e x -> App es x) -> App (e ': es) a -> App es a
 interpret f m = do
   es <- ask
-  let handler = Handler $ \e -> unApp (f e) es
+  let
+    handler = Handler $ \e -> unApp (f e) es
   unsafeLiftIO $ unApp m (handler <: es)
 
 runIO :: App '[IO] a -> IO a

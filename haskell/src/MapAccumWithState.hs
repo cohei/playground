@@ -1,20 +1,22 @@
 {-# LANGUAGE NoMonoLocalBinds #-}
+
 module MapAccumWithState (mapAccumL, mapAccumR) where
 
-import           Control.Applicative.Backwards (Backwards (Backwards, forwards))
-import           Control.Monad.State           (runState, state)
-import           Data.Tuple                    (swap)
+import Control.Applicative.Backwards (Backwards (Backwards, forwards))
+import Control.Monad.State (runState, state)
+import Data.Tuple (swap)
 
-mapAccumL :: Traversable t => (a -> b -> (a, c)) -> a -> t b -> (a, t c)
+mapAccumL :: (Traversable t) => (a -> b -> (a, c)) -> a -> t b -> (a, t c)
 mapAccumL =
   process . (runState .) . traverse . (state .) . process
 
-mapAccumR :: Traversable t => (a -> b -> (a, c)) -> a -> t b -> (a, t c)
+mapAccumR :: (Traversable t) => (a -> b -> (a, c)) -> a -> t b -> (a, t c)
 mapAccumR =
   process . (runState .) . (forwards .) . traverse . (Backwards .) . (state .) . process
 
 process :: (a -> b -> (c, d)) -> (b -> a -> (d, c))
 process = ((swap .) .) . flip
+
 -- process f b a = swap $ f a b
 
 {-

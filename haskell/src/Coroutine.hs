@@ -19,40 +19,40 @@ import Control.Monad.Trans.Class (MonadTrans (lift))
 newtype CoroutineT r m a = CoroutineT {unCoroutineT :: ContT r (StateT [CoroutineT r m ()] m) a}
   deriving (Functor, Applicative, Monad, MonadIO, MonadCont)
 
-get :: Monad m => CoroutineT r m [CoroutineT r m ()]
+get :: (Monad m) => CoroutineT r m [CoroutineT r m ()]
 get = CoroutineT $ lift S.get
 
-put :: Monad m => [CoroutineT r m ()] -> CoroutineT r m ()
+put :: (Monad m) => [CoroutineT r m ()] -> CoroutineT r m ()
 put = CoroutineT . lift . S.put
 
-dequeue :: Monad m => CoroutineT r m ()
+dequeue :: (Monad m) => CoroutineT r m ()
 dequeue =
   get >>= \case
     [] -> pure ()
     c : cs -> put cs >> c
 
-enqueue :: Monad m => CoroutineT r m () -> CoroutineT r m ()
+enqueue :: (Monad m) => CoroutineT r m () -> CoroutineT r m ()
 enqueue c = put . (++ [c]) =<< get
 
-yield :: Monad m => CoroutineT r m ()
+yield :: (Monad m) => CoroutineT r m ()
 yield =
   callCC \k -> do
     enqueue $ k ()
     dequeue
 
-fork :: Monad m => CoroutineT r m () -> CoroutineT r m ()
+fork :: (Monad m) => CoroutineT r m () -> CoroutineT r m ()
 fork c =
   callCC \k -> do
     enqueue $ k ()
     c
     dequeue
 
-exhaust :: Monad m => CoroutineT r m ()
+exhaust :: (Monad m) => CoroutineT r m ()
 exhaust = do
   exhausted <- null <$> get
   unless exhausted $ yield >> exhaust
 
-runCoroutineT :: Monad m => CoroutineT r m r -> m r
+runCoroutineT :: (Monad m) => CoroutineT r m r -> m r
 runCoroutineT = flip evalStateT [] . flip runContT pure . unCoroutineT . (<* exhaust)
 
 -- | >>> main
@@ -71,5 +71,5 @@ main = runCoroutineT $ do
   fork $ replicateM_ 4 (printOne 4)
   replicateM_ 2 (printOne 2)
   where
-    printOne :: MonadIO m => Int -> CoroutineT r m ()
+    printOne :: (MonadIO m) => Int -> CoroutineT r m ()
     printOne n = liftIO (print n) >> yield

@@ -12,12 +12,12 @@ import Data.Maybe (fromJust)
 -- | Bisection Method
 bisection :: (Ord a, Fractional a, Ord b, Num b) => (a -> b) -> a -> a -> Maybe a
 bisection f a b
-  | b - a < 1e-4              = Just b
-  | f a == 0                  = Just a
-  | f b == 0                  = Just b
+  | b - a < 1e-4 = Just b
+  | f a == 0 = Just a
+  | f b == 0 = Just b
   | differentSign (f a) (f m) = bisection f a m
   | differentSign (f m) (f b) = bisection f m b
-  | otherwise                 = Nothing
+  | otherwise = Nothing
   where
     m = middle a b
 
@@ -40,16 +40,16 @@ converge p = fst . fromJust . find (uncurry p) . pairs
 simpson :: (Ord a, Floating a) => (a -> a) -> a -> a -> a
 simpson f a b = converge (\x y -> x - y < 10 ** (-10)) $ fmap (simpSum f) $ NE.iterate addMiddle $ ne a b
 
-addMiddle :: Fractional a => NonEmpty a -> NonEmpty a
+addMiddle :: (Fractional a) => NonEmpty a -> NonEmpty a
 addMiddle xs = concat (pairsWith (\a b -> [a, middle a b]) xs) |: NE.last xs
 
-rule :: Fractional a => (a -> a) -> a -> a -> a
+rule :: (Fractional a) => (a -> a) -> a -> a -> a
 rule f a b = (b - a) / 6 * (f a + 4 * f (middle a b) + f b)
 
-simpSum :: Fractional a => (a -> a) -> NonEmpty a -> a
+simpSum :: (Fractional a) => (a -> a) -> NonEmpty a -> a
 simpSum f xs = sum $ pairsWith (rule f) xs
 
-middle :: Fractional a => a -> a -> a
+middle :: (Fractional a) => a -> a -> a
 middle x y = (x + y) / 2
 
 -- * NonEmpty utilities

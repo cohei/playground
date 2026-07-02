@@ -1,9 +1,10 @@
 {-# LANGUAGE TypeFamilies #-}
+
 -- | <https://keens.github.io/blog/2016/11/22/rustnokanrenkatanotsukaidokoro/ Rustの関連型の使いどころ>
 module AssociatedType where
 
-import           Data.Int  (Int64)
-import           Data.Word (Word64)
+import Data.Int (Int64)
+import Data.Word (Word64)
 
 class ToUnsigned a where
   type Unsigned a

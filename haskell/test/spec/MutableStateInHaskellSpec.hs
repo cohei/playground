@@ -1,12 +1,13 @@
 {-# LANGUAGE ScopedTypeVariables #-}
+
 module MutableStateInHaskellSpec (spec) where
 
-import           Data.List               (sort)
-import           Test.Hspec              (Spec, describe)
-import           Test.Hspec.QuickCheck   (prop)
-import           Test.QuickCheck.Monadic (assert, monadicIO, run)
+import Data.List (sort)
+import Test.Hspec (Spec, describe)
+import Test.Hspec.QuickCheck (prop)
+import Test.QuickCheck.Monadic (assert, monadicIO, run)
 
-import           MutableStateInHaskell   (bubbleSortIO, bubbleSortST)
+import MutableStateInHaskell (bubbleSortIO, bubbleSortST)
 
 spec :: Spec
 spec = do

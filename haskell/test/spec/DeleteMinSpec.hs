@@ -1,14 +1,15 @@
-{-# LANGUAGE OverloadedLists  #-}
+{-# LANGUAGE OverloadedLists #-}
 {-# LANGUAGE TypeApplications #-}
+
 module DeleteMinSpec (spec) where
 
-import           Data.Function             (on)
-import           Data.List                 (sort)
-import           Test.Hspec                (Spec, describe, it, shouldBe)
-import           Test.Hspec.QuickCheck     (prop)
-import           Test.QuickCheck.Instances ()
+import Data.Function (on)
+import Data.List (sort)
+import Test.Hspec (Spec, describe, it, shouldBe)
+import Test.Hspec.QuickCheck (prop)
+import Test.QuickCheck.Instances ()
 
-import           DeleteMin                 (deleteMin, deleteMinPara)
+import DeleteMin (deleteMin, deleteMinPara)
 
 spec :: Spec
 spec = do

@@ -14,7 +14,7 @@ module LaxMonoidalFunctor where
 import Control.Lens (Iso', iso)
 import Data.Bifunctor (Bifunctor)
 import Data.Bifunctor.Assoc (Assoc)
-import Data.Kind (Type, Constraint)
+import Data.Kind (Constraint, Type)
 import Data.Void (Void, absurd)
 import Prelude hiding (product, (**))
 
@@ -23,25 +23,25 @@ import Prelude hiding (product, (**))
 -- >>> import Data.Bifunctor (first, second)
 -- >>> import Data.Bifunctor.Assoc (Assoc(assoc, unassoc))
 
-class Bifunctor p => Unital p where
-  type Unit p :: Type
+class (Bifunctor p) => Unital p where
   -- data Unit p :: Type
+  type Unit p :: Type
 
   leftUniter :: Iso' (Unit p `p` a) a
   rightUniter :: Iso' (a `p` Unit p) a
 
 instance Unital (,) where
-  type Unit (,) = ()
   -- data Unit (,) = ProductUnit ()
+  type Unit (,) = ()
 
-  leftUniter = iso snd ((),)
-  rightUniter = iso fst (,())
   -- leftUniter = iso (\(ProductUnit (), a) -> a) (ProductUnit (),)
   -- rightUniter = iso (\(a, ProductUnit ()) -> a) (, ProductUnit ())
+  leftUniter = iso snd ((),)
+  rightUniter = iso fst (,())
 
 instance Unital Either where
-  type Unit Either = Void
   -- data Unit Either = SumUnit Void
+  type Unit Either = Void
 
   leftUniter = iso (either absurd id) Right
   rightUniter = iso (either id absurd) Left
@@ -67,7 +67,7 @@ newtype Wrapped f a
   = Wrapped (f a)
   deriving (Functor)
 
-instance Applicative f => LaxMonoidalFunctor (,) (Wrapped f) where
+instance (Applicative f) => LaxMonoidalFunctor (,) (Wrapped f) where
   unit () = Wrapped $ pure ()
   product (Wrapped f, Wrapped g) = Wrapped $ liftA2 (,) f g
 
@@ -84,5 +84,5 @@ instance (LaxMonoidalFunctor (,) f) => Applicative (Wrapped f) where
   Wrapped ff <*> Wrapped fx = Wrapped $ uncurry ($) <$> product (ff, fx)
 
 -- Strong?
-tensorStrength :: Functor f => a -> f b -> f (a, b)
+tensorStrength :: (Functor f) => a -> f b -> f (a, b)
 tensorStrength = (<$>) . (,)

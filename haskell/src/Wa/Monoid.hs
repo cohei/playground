@@ -1,11 +1,12 @@
-{-# OPTIONS_GHC -Wno-missing-methods #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
+{-# OPTIONS_GHC -Wno-missing-methods #-}
+
 module Wa.Monoid (の, と, 和, 積) where
 
 import Data.Function ((&))
 
-newtype MonoidInt =
-  MonoidInt [Int]
+newtype MonoidInt
+  = MonoidInt [Int]
   deriving (Semigroup)
 
 instance Num MonoidInt where

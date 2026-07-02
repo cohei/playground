@@ -1,10 +1,11 @@
 {-# LANGUAGE TypeApplications #-}
+
 module SizeSpec (spec) where
 
-import           Data.Proxy (Proxy (Proxy))
-import           Test.Hspec (Spec, describe, it, shouldBe)
+import Data.Proxy (Proxy (Proxy))
+import Test.Hspec (Spec, describe, it, shouldBe)
 
-import           Size       (size)
+import Size (size)
 
 spec :: Spec
 spec =

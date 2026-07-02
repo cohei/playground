@@ -1,11 +1,12 @@
 {-# OPTIONS_GHC -Wno-missing-methods #-}
+
 module Wa.Reader (の, と, 和, 積) where
 
-import Control.Monad.Reader (Reader, ask, runReader, local)
+import Control.Monad.Reader (Reader, ask, local, runReader)
 import Data.Function ((&))
 
-newtype IntWithBiOp =
-  IntWithBiOp (Reader (Int -> Int -> Int) Int)
+newtype IntWithBiOp
+  = IntWithBiOp (Reader (Int -> Int -> Int) Int)
 
 instance Num IntWithBiOp where
   fromInteger = IntWithBiOp . pure . fromInteger

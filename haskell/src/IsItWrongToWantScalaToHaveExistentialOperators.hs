@@ -1,10 +1,10 @@
 -- | [「Scalaに存在演算子を求めるのは間違っているだろうか」をLens/Prismで解いてみる](http://aoino.hatenablog.com/entry/2015/07/15/164425)
 module IsItWrongToWantScalaToHaveExistentialOperators
-  ( A(A)
-  , B(B)
-  , C(C)
-  , D(D)
-  , E(E)
+  ( A (A)
+  , B (B)
+  , C (C)
+  , D (D)
+  , E (E)
   , a
   , b
   , c
@@ -12,7 +12,7 @@ module IsItWrongToWantScalaToHaveExistentialOperators
   , e
   ) where
 
-import           Control.Lens (Lens', Prism', lens, prism')
+import Control.Lens (Lens', Prism', lens, prism')
 
 newtype A = A Int
   deriving (Show, Eq)

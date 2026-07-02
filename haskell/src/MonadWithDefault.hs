@@ -1,28 +1,29 @@
-{-# OPTIONS_GHC -Wno-redundant-constraints #-}
 {-# LANGUAGE DefaultSignatures #-}
+{-# OPTIONS_GHC -Wno-redundant-constraints #-}
+
 module MonadWithDefault where
 
-import           Prelude ((.))
+import Prelude ((.))
 
 class Functor f where
   fmap :: (a -> b) -> f a -> f b
-  default fmap :: Applicative f => (a -> b) -> f a -> f b
+  default fmap :: (Applicative f) => (a -> b) -> f a -> f b
   fmap = (<*>) . pure
 
-class Functor f => Applicative f where
+class (Functor f) => Applicative f where
   pure :: a -> f a
-  default pure :: Monad f => a -> f a
+  default pure :: (Monad f) => a -> f a
   pure = return
 
   (<*>) :: f (a -> b) -> f a -> f b
-  default (<*>) :: Monad f => f (a -> b) -> f a -> f b
+  default (<*>) :: (Monad f) => f (a -> b) -> f a -> f b
   mf <*> mx = mf >>= \f -> mx >>= \x -> pure (f x)
 
-class Applicative m => Monad m where
+class (Applicative m) => Monad m where
   return :: a -> m a
   (>>=) :: m a -> (a -> m b) -> m b
 
-newtype Identity a = Identity { runIdentity :: a }
+newtype Identity a = Identity {runIdentity :: a}
 
 instance Monad Identity where
   return = Identity

@@ -1,10 +1,11 @@
 {-# LANGUAGE BlockArguments #-}
 {-# LANGUAGE MagicHash #-}
+
 module LevityPolymorphismSpec (spec) where
 
-import Test.Hspec (it , describe, shouldBe, Spec)
+import Test.Hspec (Spec, describe, it, shouldBe)
 
-import           LevityPolymorphism (toString, twice, add)
+import LevityPolymorphism (add, toString, twice)
 
 spec :: Spec
 spec = do

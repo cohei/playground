@@ -1,8 +1,8 @@
 -- https://scrapbox.io/haskell-shoen/限定継続
 module DelimitedContinuation (main) where
 
-import           Control.Monad.CC          (reset, runCCT, shift)
-import           Control.Monad.Trans.Class (lift)
+import Control.Monad.CC (reset, runCCT, shift)
+import Control.Monad.Trans.Class (lift)
 
 -- |
 -- >>> main

@@ -1,12 +1,12 @@
 {-# LANGUAGE DataKinds #-}
-{-# LANGUAGE UndecidableInstances #-}
 {-# LANGUAGE TypeFamilies #-}
-{- |
-[TypeScript の型のみで世界一型の厳しいプログラミング](https://zenn.dev/ame_x/articles/8ec1ec35cdc392)
--}
+{-# LANGUAGE UndecidableInstances #-}
+
+-- |
+-- [TypeScript の型のみで世界一型の厳しいプログラミング](https://zenn.dev/ame_x/articles/8ec1ec35cdc392)
 module TypeLevelTrim (Trim) where
 
-import GHC.TypeLits (Symbol, ConsSymbol, UnconsSymbol)
+import GHC.TypeLits (ConsSymbol, Symbol, UnconsSymbol)
 
 -- |
 -- >>> :seti -XDataKinds
@@ -24,8 +24,8 @@ type family TrimLeft s where
 type TrimLeft1 :: Maybe (Char, Symbol) -> Symbol
 type family TrimLeft1 unconsed where
   TrimLeft1 Nothing = ""
-  TrimLeft1 (Just '( ' ', s )) = TrimLeft s
-  TrimLeft1 (Just '( c, s )) = ConsSymbol c s
+  TrimLeft1 (Just '( ' ', s)) = TrimLeft s
+  TrimLeft1 (Just '(c, s)) = ConsSymbol c s
 
 type TrimRight :: Symbol -> Symbol
 type family TrimRight s where

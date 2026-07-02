@@ -1,11 +1,12 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE PackageImports #-}
+
 module Xor (Xor (Xor)) where
 
-import "group-theory" Data.Group (Group (invert), Abelian) -- package qualified for doctest
 import Data.Group.Cyclic (Cyclic (generator))
-import Data.Group.Finite (FiniteGroup, FiniteAbelianGroup)
+import Data.Group.Finite (FiniteAbelianGroup, FiniteGroup)
 import Test.QuickCheck (Arbitrary)
+import "group-theory" Data.Group (Abelian, Group (invert)) -- package qualified for doctest
 
 newtype Xor = Xor Bool
   deriving (Eq, Bounded, Show, Arbitrary)
@@ -15,16 +16,16 @@ newtype Xor = Xor Bool
 -- Xor True
 instance Semigroup Xor where
   Xor False <> Xor False = Xor False
-  Xor False <> Xor True  = Xor True
-  Xor True  <> Xor False = Xor True
-  Xor True  <> Xor True  = Xor False
+  Xor False <> Xor True = Xor True
+  Xor True <> Xor False = Xor True
+  Xor True <> Xor True = Xor False
 
 instance Monoid Xor where
   mempty = Xor False
 
 instance Group Xor where
   invert (Xor False) = Xor False
-  invert (Xor True)  = Xor True
+  invert (Xor True) = Xor True
 
 -- |
 -- prop> (x :: Xor) <> y == y <> x
@@ -45,4 +46,5 @@ instance Cyclic Xor where
 -- >>> finiteOrder (Xor True)
 -- 2
 instance FiniteGroup Xor
+
 instance FiniteAbelianGroup Xor

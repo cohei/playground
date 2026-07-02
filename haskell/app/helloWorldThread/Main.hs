@@ -1,11 +1,10 @@
 module Main (main) where
 
-import           Control.Concurrent           (forkIO)
-import           Control.Concurrent.STM.TMVar (isEmptyTMVar, newEmptyTMVarIO,
-                                               putTMVar, takeTMVar)
-import           Control.Monad                (unless)
-import           Control.Monad.STM            (atomically, retry)
-import           Data.Foldable                (for_)
+import Control.Concurrent (forkIO)
+import Control.Concurrent.STM.TMVar (isEmptyTMVar, newEmptyTMVarIO, putTMVar, takeTMVar)
+import Control.Monad (unless)
+import Control.Monad.STM (atomically, retry)
+import Data.Foldable (for_)
 
 main :: IO ()
 main = do

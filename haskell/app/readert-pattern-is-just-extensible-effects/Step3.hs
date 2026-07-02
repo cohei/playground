@@ -26,7 +26,8 @@ send e = do
 interpret :: (forall x. e x -> App es x) -> App (e ': es) a -> App es a
 interpret f m = do
   es <- ask
-  let handler = Handler $ \e -> runReaderT (f e) es
+  let
+    handler = Handler $ \e -> runReaderT (f e) es
   liftIO $ runReaderT m (handler <: es)
 
 run :: App '[] a -> IO a

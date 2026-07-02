@@ -18,10 +18,9 @@ Example by Arc:
 -}
 module AccumulatorGenerator where
 
-import           Control.Monad.State (State, evalState, get, modify, put)
+import Control.Monad.State (State, evalState, get, modify, put)
 
 test1, test2, test3, test4, test5 :: Bool
-
 -- like Arc
 test1 = runAccumulatorGenerator $ do
   accumulator' <- accumulatorGenerator 10

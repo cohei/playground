@@ -1,6 +1,7 @@
-{-# LANGUAGE DeriveFunctor             #-}
+{-# LANGUAGE DeriveFunctor #-}
 {-# LANGUAGE ExistentialQuantification #-}
-{-# LANGUAGE StandaloneDeriving        #-}
+{-# LANGUAGE StandaloneDeriving #-}
+
 module DayConvolution where
 
 data Day f g a = forall x y. Day (f x) (g y) (x -> y -> a)
